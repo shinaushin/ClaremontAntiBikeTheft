@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BikeNab</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_section1">Bikes</string>
+    <string name="title_section2">Incident Report</string>
+    <string name="title_section3">Serial Number Search</string>
+    <string name="FrontPage">\tDo you need to register your bike or edit your bike information? If so, swipe left.\n\n\tHas your bike been stolen. If so, click on REPORT and enter your passcode.</string>
+    <string name="button_report">REPORT</string>
+    <string name="Name">*Name:</string>
+    <string name="Header">Please enter in as much of your contact information as possible.</string>
+    <string name="Street_Address">*Street Address:</string>
+    <string name="Phone_Number">*Phone Number:</string>
+    <string name="Email_Address">*Email Address:</string>
+    <string name="Submit">Submit</string>
+    <string name="Facebook">Facebook URL:</string>
+    <string name="Twitter">Twitter URL:</string>
+    <string name="LinkedIn">LinkedIn URL:</string>
+    <string name="Google_Plus">Google Plus URL:</string>
+    <string name="edit_button">Edit</string>
+    <string name="title">Main Page</string>
+    <string name="title_section4">Edit Contact Info</string>
+
+</resources>

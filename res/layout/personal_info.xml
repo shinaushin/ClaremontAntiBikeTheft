@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" >
+	    
+	    <TextView
+	        android:text="@string/Header"
+	        android:textSize="15sp"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:layout_marginTop="10dp"
+	      	android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1.5" />
+	    
+	    <LinearLayout
+	        android:layout_width="fill_parent" 
+	        android:layout_height="35dp" 
+	        android:orientation="horizontal"
+	        android:layout_marginTop="13dp" >
+	        
+	        <TextView
+	            android:text="@string/Name"
+	            android:textSize="13sp"
+	        	android:layout_width="wrap_content"
+	        	android:layout_marginLeft="10dp"
+	        	android:layout_marginRight="10dp"
+	        	android:layout_height="25dp" />
+	        
+	        <EditText
+	            android:background="@drawable/rounded_edittext"
+	            android:hint="First Last"
+			 	android:id="@+id/name"
+				android:layout_width="fill_parent"
+			 	android:layout_height="30dp"
+			 	android:textSize="13sp"
+			 	android:layout_marginRight="10dp"
+			 	android:padding="8dp" />
+	        
+	    </LinearLayout>
+	    
+	    <LinearLayout
+	        android:layout_width="fill_parent" 
+	        android:layout_height="35dp" 
+	        android:orientation="horizontal"
+	        android:layout_marginTop="3dp" >
+	        
+	        <TextView
+	            android:text="@string/Street_Address"
+	            android:textSize="13sp"
+	        	android:layout_width="wrap_content"
+	        	android:layout_marginLeft="10dp"
+	        	android:layout_marginRight="10dp"
+	        	android:layout_height="25dp" />
+	        
+	        <EditText
+	            android:id="@+id/street_address"
+	            android:hint="Street, City, State Zip Code"
+	            android:layout_height="wrap_content"
+				android:isScrollContainer="true"
+				android:minHeight="30dp" 
+				android:inputType="textMultiLine"
+			 	android:layout_width="fill_parent"
+			 	android:textSize="13sp"
+			 	android:layout_marginRight="10dp"
+			 	android:background="@drawable/rounded_edittext"
+			 	android:padding="8dp" />
+	        
+	    </LinearLayout>
+	    
+	    <LinearLayout
+	        android:layout_width="fill_parent" 
+	        android:layout_height="35dp" 
+	        android:orientation="horizontal"
+	        android:layout_marginTop="3dp" >
+	        
+	        <TextView
+	            android:text="@string/Email_Address"
+	            android:textSize="13sp"
+	        	android:layout_width="wrap_content"
+	        	android:layout_marginLeft="10dp"
+	        	android:layout_marginRight="10dp"
+	        	android:layout_height="25dp" />
+	        
+	        <EditText
+	            android:id="@+id/email_address"
+			 	android:layout_width="fill_parent"
+			 	android:layout_height="30dp"
+			 	android:textSize="13sp"
+			 	android:layout_marginRight="10dp"
+			 	android:background="@drawable/rounded_edittext"
+			 	android:padding="8dp" />
+	        
+	    </LinearLayout>
+	    
+	    <LinearLayout
+	        android:layout_width="fill_parent" 
+	        android:layout_height="35dp" 
+	        android:orientation="horizontal"
+	        android:layout_marginTop="3dp" >
+	        
+	        <TextView
+	            android:text="@string/Phone_Number"
+	            android:textSize="13sp"
+	        	android:layout_width="wrap_content"
+	        	android:layout_marginLeft="10dp"
+	        	android:layout_marginRight="10dp"
+	        	android:layout_height="25dp" />
+	        
+	        <EditText
+	           	android:id="@+id/phone_number"
+	            android:hint="XXX-XXX-XXXX"
+			 	android:layout_width="fill_parent"
+			 	android:layout_height="30dp"
+			 	android:textSize="13sp"
+			 	android:layout_marginRight="10dp"
+			 	android:background="@drawable/rounded_edittext"
+			 	android:padding="8dp" />
+	        
+	    </LinearLayout>
+	    
+	    <LinearLayout
+	        android:layout_width="fill_parent" 
+	        android:layout_height="35dp" 
+	        android:orientation="horizontal"
+	        android:layout_marginTop="3dp" >
+	        
+	        <TextView
+	            android:text="@string/Facebook"
+	            android:textSize="13sp"
+	        	android:layout_width="wrap_content"
+	        	android:layout_marginLeft="10dp"
+	        	android:layout_marginRight="10dp"
+	        	android:layout_height="25dp" />
+	        
+	        <EditText
+	            android:id="@+id/facebook"
+	            android:hint="Copy and paste the url"
+			 	android:layout_width="fill_parent"
+			 	android:layout_height="30dp"
+			 	android:textSize="13sp"
+			 	android:layout_marginRight="10dp"
+			 	android:background="@drawable/rounded_edittext"
+			 	android:padding="8dp" />
+	        
+	    </LinearLayout>
+	    
+	    <LinearLayout
+	        android:layout_width="fill_parent" 
+	        android:layout_height="35dp" 
+	        android:orientation="horizontal"
+	        android:layout_marginTop="3dp" >
+	        
+	        <TextView
+	            android:text="@string/Twitter"
+	            android:textSize="13sp"
+	        	android:layout_width="wrap_content"
+	        	android:layout_marginLeft="10dp"
+	        	android:layout_marginRight="10dp"
+	        	android:layout_height="25dp" />
+	        
+	        <EditText
+	            android:id="@+id/twitter"
+	            android:hint="Copy and paste the url"
+			 	android:layout_width="fill_parent"
+			 	android:layout_height="30dp"
+			 	android:textSize="13sp"
+			 	android:layout_marginRight="10dp"
+			 	android:background="@drawable/rounded_edittext"
+			 	android:padding="8dp" />
+	        
+	    </LinearLayout>
+	    
+	    <LinearLayout
+	        android:layout_width="fill_parent" 
+	        android:layout_height="35dp" 
+	        android:orientation="horizontal"
+	        android:layout_marginTop="3dp" >
+	        
+	        <TextView
+	            android:text="@string/LinkedIn"
+	            android:textSize="13sp"
+	        	android:layout_width="wrap_content"
+	        	android:layout_marginLeft="10dp"
+	        	android:layout_marginRight="10dp"
+	        	android:layout_height="25dp" />
+	        
+	        <EditText
+	            android:id="@+id/linkedin"
+	            android:hint="Copy and paste the url"
+			 	android:layout_width="fill_parent"
+			 	android:layout_height="30dp"
+			 	android:textSize="13sp"
+			 	android:layout_marginRight="10dp"
+			 	android:background="@drawable/rounded_edittext"
+			 	android:padding="8dp" />
+	        
+	    </LinearLayout>
+	    
+	    <LinearLayout
+	        android:layout_width="fill_parent" 
+	        android:layout_height="35dp" 
+	        android:orientation="horizontal"
+	        android:layout_marginTop="3dp" >
+	        
+	        <TextView
+	            android:text="@string/Google_Plus"
+	            android:textSize="13sp"
+	        	android:layout_width="wrap_content"
+	        	android:layout_marginLeft="10dp"
+	        	android:layout_marginRight="10dp"
+	        	android:layout_height="25dp" />
+	        
+	        <EditText
+	            android:id="@+id/google_plus"
+	            android:hint="Copy and paste the url"
+			 	android:layout_width="fill_parent"
+			 	android:layout_height="30dp"
+			 	android:textSize="13sp"
+			 	android:layout_marginRight="10dp"
+			 	android:background="@drawable/rounded_edittext"
+			 	android:padding="8dp" />
+	        
+	    </LinearLayout>
+	    
+	    <RelativeLayout
+	        android:layout_width="fill_parent" 
+	        android:layout_height="40dp" 
+	        android:orientation="horizontal"
+	        android:layout_marginTop="10dp" >
+	        
+	        <Button
+	             android:background="@drawable/sandrift"
+	             android:onClick="onClick"
+	             android:id="@+id/submitbutton"
+				 android:layout_width="125dp"
+				 android:layout_height="35dp"
+				 android:clickable="true" 
+				 android:layout_centerInParent="true"
+				 android:text="@string/Submit"
+				 android:layout_marginBottom="10dp" />
+	        
+	    </RelativeLayout>
+	    
+	</LinearLayout>
+		
+</ScrollView>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+        
+	   	<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:orientation="vertical" >
+		    
+		    <LinearLayout
+		        android:layout_marginTop="10dp"
+		        android:layout_width="fill_parent" 
+		        android:layout_height="0dp" 
+		        android:orientation="horizontal"
+		        android:layout_weight="0.15" >
+		        
+		        <TextView
+		            android:text="Serial Number"
+		            android:textSize="13sp"
+		        	android:layout_width="wrap_content"
+		        	android:layout_marginLeft="10dp"
+		        	android:layout_marginRight="10dp"
+		        	android:layout_height="25dp" />
+		        
+		        <EditText
+		            android:background="@drawable/rounded_edittext"
+				 	android:id="@+id/serial"
+					android:layout_width="fill_parent"
+				 	android:layout_height="30dp"
+				 	android:textSize="13sp"
+				 	android:layout_marginRight="10dp"
+				 	android:padding="8dp" />
+		        
+		    </LinearLayout>
+		    
+		    <LinearLayout
+		        android:layout_width="fill_parent" 
+		        android:layout_height="0dp" 
+		        android:layout_marginTop = "3dp"
+		        android:orientation="horizontal"
+		        android:layout_weight="0.5" >
+		        
+		        <TextView
+		            android:text="Bike Description"
+		            android:textSize="13sp"
+		        	android:layout_width="wrap_content"
+		        	android:layout_marginLeft="10dp"
+		        	android:layout_marginRight="10dp"
+		        	android:layout_height="25dp" />
+		        
+		        <EditText
+		            android:id="@+id/description"
+				 	android:layout_width="fill_parent"
+				 	android:layout_height="95dp"
+				 	android:background="@drawable/rounded_edittext"
+				 	android:textSize="13sp"
+				 	android:layout_marginRight="10dp"
+				 	android:padding="8dp" />
+		        
+		    </LinearLayout>
+		    
+		    <LinearLayout
+		        android:layout_width="fill_parent" 
+		        android:layout_height="0dp" 
+		        android:orientation="horizontal"
+		        android:layout_marginTop="5dp"
+		        android:layout_weight="0.10" >
+		        
+			    <TextView
+			            android:text="What photos do I need to upload?"
+			            android:textSize="13sp"
+			        	android:layout_width="wrap_content"
+			        	android:layout_height="match_parent"
+			        	android:layout_marginLeft="10dp"/>
+			    
+			</LinearLayout>
+			
+		    <LinearLayout
+		        android:layout_width="fill_parent" 
+		        android:layout_height="0dp" 
+		        android:orientation="horizontal"
+		        android:layout_weight="0.08" >
+			    
+		        <TextView
+		            android:text="Answer: "
+		            android:layout_marginTop="2dp"
+		            android:textSize="13sp"
+		        	android:layout_width="wrap_content"
+		        	android:layout_height="match_parent"
+		        	android:layout_marginLeft="10dp"/>
+		        
+			    <ImageButton
+			        android:id="@+id/imageButton"
+			        android:layout_width="20dp"
+			        android:layout_height="20dp"
+			        android:src="@drawable/rsz_1help" 
+			        android:layout_marginRight="10dp"/>
+			    
+			 </LinearLayout>
+		    
+		    <LinearLayout
+		        android:layout_width="fill_parent" 
+		        android:layout_height="wrap_content" 
+		        android:orientation="horizontal" >
+			    
+			    <Button
+			        android:id="@+id/buttons"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginLeft="10dp"
+			        android:onClick="choose"
+			        android:textSize="11sp"
+			        android:minHeight="0dp"
+					android:minWidth="0dp"
+			        android:text="Choose Photos" />
+			    
+			    <Button
+			        android:id="@+id/take"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="11sp"
+			        android:minHeight="0dp"
+					android:minWidth="0dp"
+			        android:text="Take Photo" />
+			    
+			    <Button
+			        android:id="@+id/clear"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="11sp"
+			        android:minHeight="0dp"
+					android:minWidth="0dp"
+					android:onClick="clear"
+			        android:text="Restart" />
+			    
+			</LinearLayout>
+		    
+		    <GridView
+		        android:id="@+id/gridview"
+		        android:numColumns="3"
+		        android:layout_marginLeft="12dp"
+		        android:layout_marginRight="7dp"
+		        android:layout_width="fill_parent"
+		        android:layout_height="275dp"
+		        android:columnWidth="95dip"
+		        android:gravity="center"
+		        android:verticalSpacing="2dip" 
+		        android:horizontalSpacing="3dip" />
+		
+		    <LinearLayout
+			    android:id="@+id/LinearLayout1"
+			    android:layout_width="fill_parent"
+			    android:layout_height="0dp"
+			    android:gravity="center"
+			    android:orientation="vertical"
+			    android:layout_weight="0.2"
+			    android:layout_marginTop="10dp" >
+		        
+			    <Button
+			        android:id="@+id/butt"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:onClick="btnChoosePhotosClick"
+			        android:text="Submit" />
+			    
+			</LinearLayout>
+			
+		</LinearLayout>
+		
+	 </ScrollView>
+
+</LinearLayout>
