@@ -237,8 +237,10 @@ public class RegisterBike extends FragmentActivity {
 			new AlertDialog.Builder(this).setTitle("Not Completed").setMessage(warning).show(); //alerts user if it is not completed and still submitted
 		} else {
 			
-			//SendBike obj = new SendBike();
-			//obj.execute();
+			//TODO make sure logic works
+			editor.putString("serial", serial);
+			editor.putString("description", description);
+			editor.commit();
 			
 			//specifically fragment 1
 			Intent intent = new Intent(this, TheFiveFrags.class); //moves from this class to TheFiveFrags class
@@ -247,105 +249,10 @@ public class RegisterBike extends FragmentActivity {
 	}
 	
 	/**
-	 * send bike object and pictures to lAMP server
-	 */
-	/*private class SendBike extends AsyncTask<Void, Void, Void> {
-		 
-		@Override
-		protected Void doInBackground(Void... params) {
-			try {
-				client.connect("bikenab.com");
-				client.enterLocalPassiveMode();
-				boolean login = client.login("bikenab", "Rufas123");
-
-			    if (login) {
-			    	if (client.listFiles("bikes.ser").length == 1) { //do same for users.ser
-			    		ftpDownload("/bikes.ser", "/storage/sdcard/bikes.ser");
-			    		
-			    		//deserialize file
-			    		try
-			            {
-			                ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/storage/sdcard/bikes.ser"));
-			                bikes = (HashMap) ois.readObject();
-			            } catch(Exception ex) {
-			            	
-			            }
-			    		
-			    		//edit hashmap
-			    		has(serial);
-			    		bike = new Bike (serial, description, 0.0, 0.0);
-			    		bikes.put(serial, bike);
-			    		
-			    		//serialize file
-			    		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/storage/sdcard/bikes.ser"))); //Select where you wish to save the file...
-			            oos.writeObject(bikes); // write the class as an 'object'
-			            oos.flush();
-			    		
-			    		//send file to server
-		                client.enterLocalPassiveMode(); // important!
-		                client.setFileType(FTP.BINARY_FILE_TYPE);
-		                String data = "/storage/sdcard/bikes.ser";
-
-		                FileInputStream in = new FileInputStream(new File(data));
-		                boolean result = client.storeFile("/bikes.ser", in);
-		                if (result) Log.v("upload result", "succeeded");
-			    	} else {
-			    		try
-			            {
-			    			bike = new Bike (serial, description, 0.0, 0.0);
-			    			bikes.put(prefs.getString("serial",""), bike);
-			    			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/storage/sdcard/bikes.ser"))); //Select where you wish to save the file...
-			    			oos.writeObject(bikes); // write the class as an 'object'
-			    			oos.flush(); // flush the stream to insure all of the information was written 
-			               
-			    			//send file to server
-			    			client.enterLocalPassiveMode(); // important!
-			    			client.setFileType(FTP.BINARY_FILE_TYPE);
-			    			String data = "/storage/sdcard/bikes.ser";
-	
-			    			FileInputStream in = new FileInputStream(new File(data));
-			    			boolean result = client.storeFile("/bikes.ser", in);
-			    			if (result) Log.v("upload result", "succeeded");
-			            } catch(Exception ex) {
-			            	Log.v("Serialization Save Error : ",ex.getMessage());
-			            	ex.printStackTrace();
-			            }
-			    	}
-			    	
-			    	editor.putString("serial", serial);
-					editor.putString("description", description);
-					editor.commit();
-			    	
-			    	//upload bike photos
-			    	client.makeDirectory("/Bike_Pictures/"+prefs.getString("serial","")+"/");
-			    	for (int a = 0; a < GridBikeInfo.str.size(); a++){
-			    		File f = new File(GridBikeInfo.str.get(a));
-			    		client.enterLocalPassiveMode(); // important!
-		    			client.setFileType(FTP.BINARY_FILE_TYPE);
-		    			FileInputStream in = new FileInputStream(f);
-		    			boolean result = client.storeFile("/Bike_Pictures/"+prefs.getString("serial","")+"/picture"+a+".jpg", in);
-			    	}
-			    	
-			    	client.logout();
-	    			client.disconnect();
-			    } else {
-			      System.out.println("Login fail...");
-			    }
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	} */
-	
-	/**
 	 * TODO what does this method do?
 	 * @param nam - serial number of bike
 	 */
 	public void has (String nam) {
-		System.out.println(bikes.containsKey(nam)); //TODO why am I printing this?
 		if (bikes.containsKey(nam)) { //if there is a bike associated with this serial number
 			int a = Integer.parseInt(nam.substring(nam.length()-1)); //parse out the last number
 			a++; //adds 1 to the number
@@ -353,23 +260,6 @@ public class RegisterBike extends FragmentActivity {
 			has(serial); //recurses until it reaches a number that hasn't been taken
 		} //TODO else if bikes does not contain that key, then shouldn't it add in that duplicate?
 	}
-	
-	/*public boolean ftpDownload(String srcFilePath, String desFilePath)
-	{
-	    boolean status = false;
-	    try {
-	        FileOutputStream desFileStream = new FileOutputStream(desFilePath);;
-	        status = client.retrieveFile(srcFilePath, desFileStream);
-	        desFileStream.flush();
-	        desFileStream.close();
-
-	        return status;
-	    } catch (Exception e) {
-	      
-	    }
-
-	    return status;
-	} */
 	
 	/**
 	 * TODO why is this premade? what does this do?

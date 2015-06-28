@@ -312,101 +312,6 @@ public class TheFiveFrags extends FragmentActivity{
     	}
 	}
 	
-	/*public boolean ftpDownload(String srcFilePath, String desFilePath)
-	{
-	    boolean status = false;
-	    try {
-	        FileOutputStream desFileStream = new FileOutputStream(desFilePath);;
-	        status = client.retrieveFile(srcFilePath, desFileStream);
-	        desFileStream.flush();
-	        desFileStream.close();
-
-	        return status;
-	    } catch (Exception e) {
-	      
-	    }
-
-	    return status;
-	}
-	
-	private class SendUser extends AsyncTask<Void, Void, Void> {
-		 
-		@Override
-		protected Void doInBackground(Void... params) {
-			try {
-				client.connect("bikenab.com");
-				client.enterLocalPassiveMode();
-				boolean login = client.login("bikenab", "Rufas123");
-
-			    if (login) {
-			    	if (client.listFiles("users.ser").length == 1) { //do same for users.ser
-			    		ftpDownload("/users.ser", "/storage/sdcard/users.ser");
-			    		
-			    		//deserialize file
-			    		try
-			            {
-			                ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/storage/sdcard/users.ser"));
-			                users = (HashMap) ois.readObject();
-			            } catch(Exception ex) {
-			            	Log.v("Serialization Read Error : ",ex.getMessage());
-			                ex.printStackTrace();
-			            }
-			    		
-			    		//edit hashmap
-			    		has(name);
-			    		User user = new User(name, streetAddress, emailAddress, phoneNum, fb, twitter, googlePlus);
-			    		users.put(name, user);
-			    		
-			    		//serialize file
-			    		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/storage/sdcard/users.ser"))); //Select where you wish to save the file...
-			            oos.writeObject(users); // write the class as an 'object'
-			            oos.flush();
-			    		
-			    		//send file to server
-		                client.enterLocalPassiveMode(); // important!
-		                client.setFileType(FTP.BINARY_FILE_TYPE);
-		                String data = "/storage/sdcard/users.ser";
-
-		                FileInputStream in = new FileInputStream(new File(data));
-		                boolean result = client.storeFile("/users.ser", in);
-		                if (result) Log.v("upload result", "succeeded");
-			    	} else {
-			    		try
-			            {
-			    			User user = new User(name, streetAddress, emailAddress, phoneNum, fb, twitter, googlePlus);
-			    			users.put(name, user);
-			    			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/storage/sdcard/users.ser"))); //Select where you wish to save the file...
-			    			oos.writeObject(users); // write the class as an 'object'
-			    			oos.flush(); // flush the stream to insure all of the information was written 
-			               
-			    			//send file to server
-			    			client.enterLocalPassiveMode(); // important!
-			    			client.setFileType(FTP.BINARY_FILE_TYPE);
-			    			String data = "/storage/sdcard/users.ser";
-	
-			    			FileInputStream in = new FileInputStream(new File(data));
-			    			boolean result = client.storeFile("/users.ser", in);
-			    			if (result) Log.v("upload result", "succeeded");
-			            } catch(Exception ex) {
-			            	Log.v("Serialization Save Error : ",ex.getMessage());
-			            	ex.printStackTrace();
-			            }
-			    	}
-			    	
-			    	client.logout();
-	    			client.disconnect();
-			    } else {
-			      System.out.println("Login fail...");
-			    }
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	} */
-	
 	/**
 	 * recursive program to deal with duplicates
 	 * @param nam - user's name
@@ -503,9 +408,12 @@ public class TheFiveFrags extends FragmentActivity{
 			        switch (which){
 			        //erases all info on bike
 			        case DialogInterface.BUTTON_POSITIVE:
-			        	//sends serial number to server to remove bike from hashmap
-    					//RemoveBike obj = new RemoveBike();
-    					//obj.execute();
+			        	editor.putString("description", "");
+						editor.putString("serial", "");
+						editor.putStringSet("key", new HashSet<String>());
+						editor.putBoolean("check",  false);
+						editor.putStringSet("key",  new HashSet<String>());
+						editor.commit(); 
     					
     					Toast.makeText(getApplicationContext(), "Bike has been deregistered.", Toast.LENGTH_LONG).show(); //lets user know that bike has been deregistered
 			            break;
@@ -534,71 +442,6 @@ public class TheFiveFrags extends FragmentActivity{
 			Toast.makeText(getApplicationContext(), "You have not registered a bike.", Toast.LENGTH_LONG).show(); //displays message saying that bike has not been registered
 		}
 	}
-
-	/*private class RemoveBike extends AsyncTask<Void, Void, Void> {
-		 
-		@Override
-		protected Void doInBackground(Void... params) {
-			try {
-				client.connect("bikenab.com");
-				client.enterLocalPassiveMode();
-				boolean login = client.login("bikenab", "Rufas123");
-
-			    if (login) {
-			    	if (client.listFiles("bikes.ser").length == 1) {
-			    		ftpDownload("/bikes.ser", "/storage/sdcard/bikes.ser");
-			    		
-			    		//deserialize file
-			    		try
-			            {
-			                ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/storage/sdcard/bikes.ser"));
-			                bikes = (HashMap) ois.readObject();
-			            } catch(Exception ex) {
-			            	
-			            }
-			    		
-			    		bikes.remove(prefs.getString("serial", ""));
-			    		//need to remove bike pictures also
-			    		FTPFile[] files = client.listFiles("/Bike_Pictures/"+prefs.getString("serial","")+"/");
-			    		
-			    		for (int i = 2; i < files.length; i++) {
-			    			client.deleteFile("/Bike_Pictures/"+prefs.getString("serial","")+"/"+files[i].getName());
-			    		}
-			    		boolean res = client.removeDirectory("/Bike_Pictures/"+prefs.getString("serial",""));
-			    		
-			    		//serialize file
-			    		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/storage/sdcard/bikes.ser"))); //Select where you wish to save the file...
-			            oos.writeObject(bikes); // write the class as an 'object'
-			            oos.flush();
-			    		
-			    		//send file to server
-		                client.enterLocalPassiveMode(); // important!
-		                client.setFileType(FTP.BINARY_FILE_TYPE);
-		                String data = "/storage/sdcard/bikes.ser";
-
-		                FileInputStream in = new FileInputStream(new File(data));
-		                boolean result = client.storeFile("/bikes.ser", in);
-		                if (result) Log.v("upload result", "succeeded");
-		                
-		                editor.putString("description", "");
-						editor.putString("serial", "");
-						editor.putStringSet("key", new HashSet<String>());
-						editor.putBoolean("check",  false);
-						editor.putStringSet("key",  new HashSet<String>());
-						editor.commit(); 
-			    	}
-			    	
-			    	client.logout();
-	                client.disconnect();
-			    }
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}*/
 	
 //------------------------------------------------------------------------------------------------//
 	
@@ -692,7 +535,12 @@ public class TheFiveFrags extends FragmentActivity{
 	 * @param view - TODO what does a View do?
 	 */
 	public void cancelReport (View view) {
-		//final RemoveReport obj1 = new RemoveReport();
+		editor.putString("description", "");
+		editor.putString("serial", "");
+		editor.putStringSet("key", new HashSet<String>());
+		editor.putBoolean("check",  false);
+		editor.putStringSet("key",  new HashSet<String>());
+		editor.commit(); 
 	
 		if (prefs.getBoolean("report", true) == false) { //if there is no report
 			Toast.makeText(getApplicationContext(), "There is no current report.", Toast.LENGTH_LONG).show(); //tell user there is no report to delete
@@ -711,7 +559,6 @@ public class TheFiveFrags extends FragmentActivity{
 			        switch (which){
 			        case DialogInterface.BUTTON_POSITIVE: //if they do want to cancel it
 			        	Toast.makeText(getApplicationContext(), "Report cancelled.", Toast.LENGTH_LONG).show(); //tell user that it is cancelled
-						//obj1.execute();
 			        	break;
 			        	
 			        case DialogInterface.BUTTON_NEGATIVE: //if they don't want to cancel it, nothing happens
@@ -737,13 +584,7 @@ public class TheFiveFrags extends FragmentActivity{
 			    public void onClick(DialogInterface dialog, int which) {
 			        switch (which){
 			        case DialogInterface.BUTTON_POSITIVE: //if bike has been recovered
-			        	
-			        	//changes isStolen = false for that bike
-			        	//StolenFalse obj = new StolenFalse();
-			        	//obj.execute();
-			        	
 			        	Toast.makeText(getApplicationContext(), "Great to hear! We will cancel your report now.", Toast.LENGTH_LONG).show(); //send positive message to user!
-						//obj1.execute();
 			        	break;
 
 			        case DialogInterface.BUTTON_NEGATIVE: //if user's bike has not been recovered
@@ -763,7 +604,6 @@ public class TheFiveFrags extends FragmentActivity{
 						        //cleans out report to restart
 						        case DialogInterface.BUTTON_POSITIVE: //if user wants to cancel report
 						        	Toast.makeText(getApplicationContext(), "Report has been cancelled.", Toast.LENGTH_LONG).show(); //tell them his/her report is cancelled
-					        		//obj1.execute();
 						        	break;
 
 						        case DialogInterface.BUTTON_NEGATIVE: //if user does not want to cancel report, do nothing
@@ -789,160 +629,6 @@ public class TheFiveFrags extends FragmentActivity{
 		}
 	}
 	
-	/*private class RemoveReport extends AsyncTask<Void, Void, Void> {
-		 
-		@Override
-		protected Void doInBackground(Void... params) {
-			try {
-				client.connect("bikenab.com");
-				client.enterLocalPassiveMode();
-				boolean login = client.login("bikenab", "Rufas123");
-
-			    if (login) {
-			    	if (client.listFiles("reports.ser").length == 1) { //do same for users.ser
-			    		ftpDownload("/reports.ser", "/storage/sdcard/reports.ser");
-			    		
-			    		//deserialize file
-			    		try
-			            {
-			                ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/storage/sdcard/reports.ser"));
-			                reports = (ArrayList<String>) ois.readObject();
-			            } catch(Exception ex) {
-			            	
-			            }
-			    		
-			    		reports.remove(prefs.getString("reportNum", ""));
-			    		//need to remove bike pictures also
-			    		FTPFile[] files = client.listFiles("/Report_Pictures/"+prefs.getString("reportNum","")+"/");
-			    		
-			    		for (int i = 2; i < files.length; i++) {
-			    			client.deleteFile("/Report_Pictures/"+prefs.getString("reportNum","")+"/"+files[i].getName());
-			    		}
-			    		boolean res = client.removeDirectory("/Report_Pictures/"+prefs.getString("reportNum",""));
-			    		
-			    		//serialize file
-			    		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/storage/sdcard/reports.ser"))); //Select where you wish to save the file...
-			            oos.writeObject(reports); // write the class as an 'object'
-			            oos.flush();
-			    		
-			    		//send file to server
-		                client.enterLocalPassiveMode(); // important!
-		                client.setFileType(FTP.BINARY_FILE_TYPE);
-		                String data = "/storage/sdcard/reports.ser";
-
-		                FileInputStream in = new FileInputStream(new File(data));
-		                boolean result = client.storeFile("/reports.ser", in);
-		                if (result) Log.v("upload result", "succeeded");
-		                
-		                editor.putString("description", "");
-						editor.putString("serial", "");
-						editor.putStringSet("key", new HashSet<String>());
-						editor.putBoolean("check",  false);
-						editor.putStringSet("key",  new HashSet<String>());
-						editor.commit(); 
-			    	}
-			    	
-			    	client.logout();
-	                client.disconnect();
-			    }
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
-	
-	private class StolenFalse extends AsyncTask<Void, Void, Void> {
-		protected Void doInBackground(Void... params) {
-			try {
-        		client.connect("bikenab.com");
-				client.enterLocalPassiveMode();
-				boolean login = client.login("bikenab", "Rufas123");
-
-			    if (login) {
-			    	if (client.listFiles("users.ser").length == 1) { //do same for users.ser
-			    		ftpDownload("/users.ser", "/storage/sdcard/users.ser");
-			    		try
-			            {
-			                ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/storage/sdcard/users.ser"));
-			                users = (HashMap<String, User>) ois.readObject();
-			            } catch(Exception ex) {
-			            	Log.v("Serialization Read Error : ",ex.getMessage());
-			                ex.printStackTrace();
-			            }
-			    		
-			    		//edit hashmap
-			    		users.get(prefs.getString("name","")).reportStart = null;
-			    		users.get(prefs.getString("name","")).reportFinish = null;
-			    		users.get(prefs.getString("name","")).isReportFinished = false;
-			    		
-			    		//serialize file
-			    		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/storage/sdcard/users.ser"))); //Select where you wish to save the file...
-			            oos.writeObject(users); // write the class as an 'object'
-			            oos.flush();
-			    		
-			    		//send file to server
-		                client.enterLocalPassiveMode(); // important!
-		                client.setFileType(FTP.BINARY_FILE_TYPE);
-		                String data = "/storage/sdcard/users.ser";
-
-		                FileInputStream in = new FileInputStream(new File(data));
-		                boolean result = client.storeFile("/users.ser", in);
-		                if (result) Log.v("upload result", "succeeded");
-			    	}
-			    	
-			    	if (client.listFiles("bikes.ser").length == 1) { //do same for users.ser
-			    		ftpDownload("/bikes.ser", "/storage/sdcard/bikes.ser");
-			    		
-			    		//deserialize file
-			    		try
-			            {
-			                ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/storage/sdcard/bikes.ser"));
-			                bikes = (HashMap) ois.readObject();
-			            } catch(Exception ex) {
-			            	Log.v("Serialization Read Error : ",ex.getMessage());
-			                ex.printStackTrace();
-			            }
-			    		
-			    		//edit hashmap
-			    		bikes.get(prefs.getString("serial","")).isStolen = false;
-			    		bikes.get(prefs.getString("serial","")).latStolen = 0;
-			    		bikes.get(prefs.getString("serial","")).longStolen = 0;
-			    		
-			    		//serialize file
-			    		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/storage/sdcard/bikes.ser"))); //Select where you wish to save the file...
-			            oos.writeObject(bikes); // write the class as an 'object'
-			            oos.flush();
-			    		
-			    		//send file to server
-		                client.enterLocalPassiveMode(); // important!
-		                client.setFileType(FTP.BINARY_FILE_TYPE);
-		                String data = "/storage/sdcard/bikes.ser";
-
-		                FileInputStream in = new FileInputStream(new File(data));
-		                boolean result = client.storeFile("/bikes.ser", in);
-		                if (result) Log.v("upload result", "succeeded");
-			    	}
-			    	
-			    	client.logout();
-	                client.disconnect();
-			    } else {
-			      System.out.println("Login fail...");
-			    }
-			} catch (SocketException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			return null;
-		}
-	} */
-	
 //------------------------------------------------------------------------------------------------//
 	
 	//Serial number search function
@@ -960,107 +646,6 @@ public class TheFiveFrags extends FragmentActivity{
 			return rootView;
 		}
 	}
-	
-	public void search(View view) {
-		//SearchMade obj = new SearchMade();
-		//obj.execute();
-	}
-	
-	/*private class SearchMade extends AsyncTask<Void, Void, Void> {
-		protected Void doInBackground(Void... params) {
-			try {
-				client.connect("bikenab.com");
-				client.enterLocalPassiveMode();
-				boolean login = client.login("bikenab", "Rufas123");
-
-			    if (login) {
-			    	if (client.listFiles("users.ser").length == 1) {
-			    		ftpDownload("/users.ser", "/storage/sdcard/users.ser");
-			    		
-			    		//deserialize file
-			    		try
-			            {
-			                ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/storage/sdcard/users.ser"));
-			                users = (HashMap) ois.readObject();
-			            } catch(Exception ex) {
-			            	Log.v("Serialization Read Error : ",ex.getMessage());
-			                ex.printStackTrace();
-			            }
-			    		
-			    		GPS gps = new GPS(getBaseContext());
-			            float latitude = 0;
-			            float longitude = 0;
-						// check if GPS enabled		
-				        if(gps.canGetLocation()){
-				        	
-				        	latitude = (float) gps.getLatitude();
-				        	longitude = (float) gps.getLongitude();
-				        }else{
-				        	// Ask user to enable GPS/network in settings
-				        	gps.showSettingsAlert();
-				        }
-				        
-			            Search search = new Search(latitude, longitude, new Date());
-			            
-			    		//edit hashmap
-			    		users.get(prefs.getString("name","")).searches.add(search);
-			    		
-			    		//serialize file
-			    		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/storage/sdcard/users.ser"))); //Select where you wish to save the file...
-			            oos.writeObject(users); // write the class as an 'object'
-			            oos.flush();
-			    		
-			    		//send file to server
-		                client.enterLocalPassiveMode(); // important!
-		                client.setFileType(FTP.BINARY_FILE_TYPE);
-		                String data = "/storage/sdcard/users.ser";
-
-		                FileInputStream in = new FileInputStream(new File(data));
-		                boolean result = client.storeFile("/users.ser", in);
-		                if (result) Log.v("upload result", "succeeded");
-			    	}
-			    	
-			    	if (client.listFiles("bikes.ser").length == 1) { //do same for users.ser
-			    		EditText editText = (EditText) findViewById(R.id.serial_num);
-		    	    	String serial = editText.getText().toString();
-		    	    	
-			    		ftpDownload("/bikes.ser", "/storage/sdcard/bikes.ser");
-			    		
-			    		//deserialize file
-			    		try
-			            {
-			                ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/storage/sdcard/bikes.ser"));
-			                bikes = (HashMap) ois.readObject();
-			            } catch(Exception ex) {
-			            	Log.v("Serialization Read Error : ",ex.getMessage());
-			                ex.printStackTrace();
-			            }
-			    		
-			    		String description = bikes.get(serial).descript;
-			    		
-		    	    	//download bike photos and save them in sdcard using ftpdownload method
-			    		//put paths into arraylist of strings and display using gridview
-		                //display bike info in new activity
-			    		
-			    		if (bikes.get(serial).isStolen == true)
-			    			Toast.makeText(getApplicationContext(), "Bike is stolen", Toast.LENGTH_LONG).show();
-			    		else
-			    			Toast.makeText(getApplicationContext(), "Bike is not stolen", Toast.LENGTH_LONG).show();
-			    	}
-			    	
-			    	client.logout();
-	    			client.disconnect();
-			    }
-			} catch (SocketException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-	} */
 	
 	//--------------------------------------------------------------------------------------------//
 	
@@ -1170,79 +755,19 @@ public class TheFiveFrags extends FragmentActivity{
     		new AlertDialog.Builder(this).setTitle("Not Completed").setMessage(message.substring(0,message.length()-2)).show();
     		//show user an error message saying that their info is incomplete
     	} else {
-			//EditContact obj = new EditContact();
-			//obj.execute();
+    		editor.putString("name", name);
+	    	editor.putString("streetAddress", streetAddress);
+	    	editor.putString("emailAddress", emailAddress);
+	    	editor.putString("phoneNum", phoneNum);
+	    	editor.putString("fb", fb);
+	    	editor.putString("twitter", twitter);
+	    	editor.putString("googlePlus", googlePlus);
+			editor.commit();
 		 
     		Intent intent = new Intent(this, TheFiveFrags.class); //go from this class to TheFiveFrags class
     		startActivity(intent);
 		}
 	}
-	
-	/*private class EditContact extends AsyncTask<Void, Void, Void> {
-		 
-		@Override
-		protected Void doInBackground(Void... params) {
-			try {
-				
-				client.connect("bikenab.com");
-				client.enterLocalPassiveMode();
-				boolean login = client.login("bikenab", "Rufas123");
-
-			    if (login) {
-			    	if (client.listFiles("users.ser").length == 1) { //do same for users.ser
-			    		ftpDownload("/users.ser", "/storage/sdcard/users.ser");
-			    		
-			    		//deserialize file
-			    		try
-			            {
-			                ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/storage/sdcard/users.ser"));
-			                users = (HashMap) ois.readObject();
-			            } catch(Exception ex) {
-			            	Log.v("Serialization Read Error : ",ex.getMessage());
-			                ex.printStackTrace();
-			            }
-			    		
-			    		//edit hashmap
-			    		users.remove(prefs.getString("name", ""));
-			    		has(name);
-			    		User user = new User(name, streetAddress, emailAddress, phoneNum, fb, twitter, googlePlus);
-			    		users.put(name, user);
-			    		
-			    		//serialize file
-			    		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("/storage/sdcard/users.ser"))); //Select where you wish to save the file...
-			            oos.writeObject(users); // write the class as an 'object'
-			            oos.flush();
-			    		
-			    		//send file to server
-		                client.enterLocalPassiveMode(); // important!
-		                client.setFileType(FTP.BINARY_FILE_TYPE);
-		                String data = "/storage/sdcard/users.ser";
-
-		                FileInputStream in = new FileInputStream(new File(data));
-		                boolean result = client.storeFile("/users.ser", in);
-		                if (result) Log.v("upload result", "succeeded");
-		                
-		                editor.putString("name", name);
-				    	editor.putString("streetAddress", streetAddress);
-				    	editor.putString("emailAddress", emailAddress);
-				    	editor.putString("phoneNum", phoneNum);
-				    	editor.putString("fb", fb);
-				    	editor.putString("twitter", twitter);
-				    	editor.putString("googlePlus", googlePlus);
-						editor.commit();
-			    	}
-			    	
-			    	client.logout();
-	                client.disconnect();
-			    }
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	} */
 	
 	//-------------------------------------------------------------------------------------------//
 	
@@ -1327,7 +852,5 @@ public class TheFiveFrags extends FragmentActivity{
 			public void onActivityCreated (Bundle savedInstanceState) {
 				super.onActivityCreated(savedInstanceState);
 			}
-		}
-		
-		
+		}	
 }
