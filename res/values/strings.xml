@@ -21,5 +21,10 @@
     <string name="edit_button">Edit</string>
     <string name="title">Main Page</string>
     <string name="title_section4">Edit Contact Info</string>
+    <string name="title_section5">Bikeshop</string>
+    <string name="title_section6">Pawn Shop</string>
+    <string name="title_section7">Law Enforcement</string>
+    <string name="title_section8">Campus/Security</string>
+    <string name="title_section9">Fundraising</string>
 
 </resources>

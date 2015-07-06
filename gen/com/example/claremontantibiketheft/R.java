@@ -128,6 +128,11 @@ public final class R {
         public static final int title_section2=0x7f060003;
         public static final int title_section3=0x7f060004;
         public static final int title_section4=0x7f060013;
+        public static final int title_section5=0x7f060014;
+        public static final int title_section6=0x7f060015;
+        public static final int title_section7=0x7f060016;
+        public static final int title_section8=0x7f060017;
+        public static final int title_section9=0x7f060018;
     }
     public static final class style {
         /** 
