@@ -1,5 +1,6 @@
 package com.example.claremontantibiketheft;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -151,33 +152,57 @@ public class GPS extends Service implements LocationListener {
 	 * Function to show settings alert dialog
 	 * On pressing Settings button will launch Settings Options
 	 * */
-	public void showSettingsAlert(){
-		AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-   	 	//TODO what does this do?
+	public void showSettingsAlert(Activity activity){
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+		    @Override
+		    /**
+		     * method for what happens when user clicks on dialog
+		     * param - dialog: TODO what does a DialogInterface do?
+		     * 		   which: TODO what does this do?
+		     */
+		    public void onClick(DialogInterface dialog, int which) {
+		        switch (which){
+		        case DialogInterface.BUTTON_POSITIVE: //if they do want to cancel it
+		        	Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+	            	mContext.startActivity(intent); 
+		        	break;
+		        	
+		        case DialogInterface.BUTTON_NEGATIVE: //if they don't want to cancel it, nothing happens
+		        	break;
+		        }
+		    }
+		};
 		
-        // Setting Dialog Title
-        alertDialog.setTitle("GPS is settings");
- 
-        // Setting Dialog Message
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
- 
-        // On pressing Settings button
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) { //called when button is clicked
-            	Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            	mContext.startActivity(intent);
-            }
-        });
- 
-        // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) { //called when button is clicked
-            dialog.cancel();
-            }
-        });
- 
-        // Showing Alert Message
-        alertDialog.show();
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity); //builds an alert dialog
+		builder.setMessage("GPS is not enabled. Do you want to go to settings menu?").setPositiveButton("Yes", dialogClickListener)
+		    .setNegativeButton("No", dialogClickListener).show(); //sets positive button to yes and negative button to no
+		
+//		AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+//   	 	//TODO what does this do?
+//		
+//        // Setting Dialog Title
+//        alertDialog.setTitle("GPS settings");
+// 
+//        // Setting Dialog Message
+//        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+// 
+//        // On pressing Settings button
+//        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog,int which) { //called when button is clicked
+//            	Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//            	mContext.startActivity(intent);
+//            }
+//        });
+// 
+//        // on pressing cancel button
+//        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int which) { //called when button is clicked
+//            dialog.cancel();
+//            }
+//        });
+// 
+//        // Showing Alert Message
+//        alertDialog.show();
 	}
 
 	

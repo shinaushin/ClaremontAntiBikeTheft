@@ -31,6 +31,11 @@
 		        <EditText
 		            android:background="@drawable/rounded_edittext"
 				 	android:id="@+id/serial"
+				 	android:maxLines="1"
+		            android:singleLine="True"
+		            android:nextFocusDown="@+id/description"
+		            android:scrollbars="horizontal"
+	               	android:scrollHorizontally="true"
 					android:layout_width="fill_parent"
 				 	android:layout_height="30dp"
 				 	android:textSize="13sp"
@@ -57,6 +62,10 @@
 		        <EditText
 		            android:id="@+id/description"
 				 	android:layout_width="fill_parent"
+				 	android:maxLines="1"
+		            android:singleLine="True"
+		            android:scrollbars="horizontal"
+	               	android:scrollHorizontally="true" 
 				 	android:layout_height="95dp"
 				 	android:background="@drawable/rounded_edittext"
 				 	android:textSize="13sp"

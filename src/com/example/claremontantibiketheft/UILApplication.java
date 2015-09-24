@@ -1,6 +1,6 @@
 package com.example.claremontantibiketheft;
 
-import android.app.Application; 
+import android.app.Application;   
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;

@@ -9,6 +9,10 @@ public class Report implements Serializable{
 	//need to clarify difference of static and non-static vars
 	//need to clarify difference of private/public vars
 		
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public String policeReportNum; //number of police report
 	public String policeEmail; //email address of police associated
 	public String dateAccident; //date of when the stolen bike incident occurred

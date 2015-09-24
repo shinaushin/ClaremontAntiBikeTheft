@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -45,22 +46,59 @@ public class TheFiveFrags extends FragmentActivity{
 	public ArrayList<String> reports = new ArrayList<String>(); //arraylist of report ID numbers
 	public static Button button; //button var
 	public Bike bike = null; //bike var
+	public static long time = 0;
+	
+	public String serial = ""; //var for serial number of bike
+	public String description = ""; //var for description of bike
+	
 	public String name = ""; //name of user
 	public String streetAddress = ""; //street address of user
 	public String emailAddress = ""; //email address of user
 	public String phoneNum = ""; //phone number of user
 	public String fb = ""; //fb url of user
+	public String instagram = ""; //instagram handle of user
 	public String twitter = ""; //twitter url of user
-	public String linkedin = ""; //linkedin url of user
-	public String googlePlus = ""; //googleplus url of user
+	
+	public String shopBikeShop = ""; //name of bike shop
+	public String nameBikeShop = ""; //name of user
+	public String streetAddressBikeShop = ""; //street address of user
+	public String emailAddressBikeShop = ""; //email address of user
+	public String phoneNumBikeShop = ""; //phone number of user
+	public String fbBikeShop = ""; //fb url of user
+	public String instagramBikeShop = ""; //instagram handle of user
+	public String twitterBikeShop = ""; //twitter url of user
+	
+	public String shopPawnShop = ""; //name of pawn shop
+	public String namePawnShop = ""; //name of user
+	public String streetAddressPawnShop = ""; //street address of user
+	public String emailAddressPawnShop = ""; //email address of user
+	public String phoneNumPawnShop = ""; //phone number of user
+	public String fbPawnShop = ""; //fb url of user
+	public String instagramPawnShop = ""; //instagram handle of user
+	public String twitterPawnShop = ""; //twitter url of user
+	
+	public String deptPoliceDept = ""; //name of police department
+	public String namePoliceDept = ""; //name of user
+	public String streetAddressPoliceDept = ""; //street address of user
+	public String emailAddressPoliceDept = ""; //email address of user
+	public String phoneNumPoliceDept = ""; //phone number of user
+	public String fbPoliceDept = ""; //fb url of user
+	public String instagramPoliceDept = "";
+	public String twitterPoliceDept = ""; //twitter url of user
+	
+	public String collegeCampus = "";
+	public String nameCampus = ""; //name of user
+	public String streetAddressCampus = ""; //street address of user
+	public String emailAddressCampus = ""; //email address of user
+	public String phoneNumCampus = ""; //phone number of user
+	public String fbCampus = ""; //fb url of user
+	public String instagramCampus = "";
+	public String twitterCampus = ""; //twitter url of user
 	
 	public static final String PREFS_NAME = "MyPrefsFile"; //TODO what does this do?
-	public SharedPreferences prefs = null; //TODO what does this do?
+	public static SharedPreferences prefs = null; //TODO what does this do?
 	public SharedPreferences.Editor editor = null; //TODO what does this do?
 	
-	public ArrayList<String> imageUrls = new ArrayList<String>(); //TODO what are urls?
-	public Section2Fragment obj = new Section2Fragment(); //TODO what does this do?
-	public HashSet<String> uri = new HashSet<String>(); //TODO what do uris do?
 	
 	public String server = "bikenab.com";
     int port = 21;
@@ -193,110 +231,24 @@ public class TheFiveFrags extends FragmentActivity{
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); //TODO what does this super do?
 		
-		boolean firstrun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("firstrun", true); //boolean value for whether this is the first time the app is opened
 		prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE); //TODO what does this do?
 		editor = prefs.edit(); //TODO what does this do?
 		
-		if (firstrun){ //if it is the first time the app is opened
-	    	setContentView(R.layout.personal_info); //open the personal info layout
-	    	editor.putBoolean("check", false); //TODO what does check do?
-	    	editor.putBoolean("report", false); //no report has been filled out yet
-			editor.commit(); //save edits
-		} else {
-			setContentView(R.layout.activity_main); //open the layout of the main page
-			
-			prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE); //TODO what does this do?
-			editor = prefs.edit(); //TODO what does this do?
-			 
-			mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager()); //TODO what does this do?
-	
-			mViewPager = (ViewPager) findViewById(R.id.pager); //TODO what does this do?
-			mViewPager.setAdapter(mSectionsPagerAdapter); //TODO what does this do?
-		}
-	}
-	
-	/**
-	 * submit contact info and verify everything is filled out correctly
-	 * @param view - TODO what does this do?
-	 */
-	public void onClick(View view) {
-		EditText editText = (EditText) findViewById(R.id.name); //sets editText to ID of name
-    	name = editText.getText().toString()+"_0"; //stores user's name and a number to detect duplicates
-    	
-    	editText = (EditText) findViewById(R.id.street_address); //sets editText to ID of street address
-    	streetAddress = editText.getText().toString(); //stores user's street address
-    	
-    	editText = (EditText) findViewById(R.id.email_address); //sets editText to ID of email address
-    	emailAddress = editText.getText().toString(); //stores user's email address
-    	
-    	editText = (EditText) findViewById(R.id.phone_number); //sets editText to ID of phone number
-    	phoneNum = editText.getText().toString(); //stores user's phone number
-    	
-    	editText = (EditText) findViewById(R.id.facebook); //sets editText to ID of facebook
-    	fb = editText.getText().toString(); //stores user's facebook url
-    	
-    	editText = (EditText) findViewById(R.id.twitter); //sets editText to ID of twitter
-    	twitter = editText.getText().toString(); //stores user's twitter url
-    	
-    	editText = (EditText) findViewById(R.id.google_plus); //sets editText to ID of google plus
-    	googlePlus = editText.getText().toString(); //stores user's google plus url
-    	
-    	String first = "The following items have not been completed properly: "; //beginning of warning
-		String second = ""; //another part of the warning string
-		String message = ""; //total warning string
-		
-		if (name.equals("")) { //if name is not filled in
-			second += "name, "; //add name to the warning
+		boolean firstrun = prefs.getBoolean("firstrun", true);
+		if (firstrun) {
+			editor.putBoolean("check", false);
+			editor.putBoolean("report", false);
+			editor.putBoolean("contact", false);
+			editor.putBoolean("firstrun",  false);
+			editor.commit();
 		}
 		
-		if (streetAddress.equals("")) { //if street address is not filled out
-			second += "street address, "; //add street address to the warning
-		}
-	
-		String EMAIL_PATTERN = 
-				"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"; //regex pattern
-		Pattern ePattern = Pattern.compile(EMAIL_PATTERN); //TODO what does a pattern do? what does compile do?
-		Matcher eMatch = ePattern.matcher(emailAddress); //TODO what does a Matcher do? what does matcher do?
+		setContentView(R.layout.activity_main); //open the layout of the main page
 		
-		if (!eMatch.matches()) //TODO what does this condition mean?
-		{
-			second += "email address, "; //add email address to warning
-		}
-		
-		String expression = "(\\d{3}-){1,2}\\d{4}"; //another regex expression
-	    CharSequence inputStr = phoneNum; //TODO what does a CharSequence do?
-	    Pattern pattern = Pattern.compile(expression); //TODO what does a Pattern do? what does compile do?
-	    Matcher matcher = pattern.matcher(inputStr); //TODO what does a Matcher do? what does matches do?
-	    
-	    if(!matcher.matches()){ //TODO what does this condition do?
-	    	second += "phone number, "; //add phone number to warning
-	    }
-	    
-	    //TODO validate street address, URLs (if possible)
-	    
-		message = first + second; //make a complete warning message
-		
-    	if (!second.equals("")) { //if there are some fields that aren't completed
-    		new AlertDialog.Builder(this).setTitle("Not Completed").setMessage(message.substring(0,message.length()-2)).show(); //show an alert message
-    	} else {
-    		getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit().putBoolean("firstrun", false).commit(); //now firstRun is false
-    		
-    		editor.putString("name", name); //saves user's name
-	    	editor.putString("streetAddress", streetAddress); //saves user's street address
-	    	editor.putString("emailAddress", emailAddress); //saves user's email address
-	    	editor.putString("phoneNum", phoneNum); //saves user's phone number
-	    	editor.putString("fb", fb); //saves user's facebook url
-	    	editor.putString("twitter", twitter); //saves user's twitter url
-	    	editor.putString("googlePlus", googlePlus); //saves user's google plus url
-			editor.commit(); //saves edits
-			
-			//SendUser obj = new SendUser();
-			//obj.execute();
-		 
-    		Intent intent = new Intent(this, TheFiveFrags.class); //goes from this class to TheFiveFrags class
-    		startActivity(intent);
-    	}
+		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager()); //TODO what does this do?
+
+		mViewPager = (ViewPager) findViewById(R.id.pager); //TODO what does this do?
+		mViewPager.setAdapter(mSectionsPagerAdapter); //TODO what does this do?
 	}
 	
 	/**
@@ -319,7 +271,7 @@ public class TheFiveFrags extends FragmentActivity{
 	 * @author shinaushin
 	 *
 	 */
-	public class TitleFragment extends Fragment {
+	public static class TitleFragment extends Fragment {
 		
 		public static final String ARG_SECTION_NUMBER = "section_number";
 		/**
@@ -333,6 +285,14 @@ public class TheFiveFrags extends FragmentActivity{
 			View rootView = inflater.inflate(R.layout.title_fragment, container, false); //TODO what does inflate do? what are its parameters?
 			return rootView;
 		}
+		
+		/**
+		 * TODO what does this method do?
+		 * param - savedInstanceState: TODO what does a Bundle do?
+		 */
+		public void onActivityCreated (Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState); //TODO what does this super to?
+		}
 	}
 
 //-----------------------------------------------------------------------------------------------//
@@ -342,7 +302,7 @@ public class TheFiveFrags extends FragmentActivity{
 	 * @author shinaushin
 	 *
 	 */
-	public class Section1Fragment extends Fragment {
+	public static class Section1Fragment extends Fragment {
 		
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -366,11 +326,14 @@ public class TheFiveFrags extends FragmentActivity{
 	 * @param view - TODO what does this View do?
 	 */
 	public void register(View view) {
-		if (prefs.getBoolean("check",  true) == true) { //if check == true
+		boolean contact = prefs.getBoolean("contact", false);
+		boolean contact2 = prefs.getBoolean("contact", true);
+		System.out.println(contact + " " + contact2);
+		if (!contact) {
+			Toast.makeText(getApplicationContext(), "Please enter in your contact info first on page 3.", Toast.LENGTH_LONG).show(); //displays warning message
+		} else if (prefs.getBoolean("check",  true) == true) { //if check == true
 			Toast.makeText(getApplicationContext(), "A bike is already registered. Please deregister first.", Toast.LENGTH_LONG).show(); //displays warning message
 		} else {
-			editor.putBoolean("check", true); //sets check to true
-			editor.commit(); //saves edit
 			Intent intent = new Intent (this, RegisterBike.class); //goes from this class to RegisterBike class
 			startActivity(intent);
 		}
@@ -381,7 +344,10 @@ public class TheFiveFrags extends FragmentActivity{
 	 * @param view - TODO what does a View do?
 	 */
 	public void deregister(View view) {
-		if (prefs.getBoolean("check", true) == false) { //if check is not true
+		boolean contact = prefs.getBoolean("contact", false);
+		if (!contact) {
+			Toast.makeText(getApplicationContext(), "Please enter in your contact info first on page 3.", Toast.LENGTH_LONG).show(); //displays warning message
+		} else if (prefs.getBoolean("check", true) == false) { //if check is not true
 			Toast.makeText(getApplicationContext(), "You have not registered a bike.", Toast.LENGTH_LONG).show(); //displays warning saying that a bike is not registered
 		} else {
 			String popup = "Are you sure you want to deregister bike? All info associated with bike will be deleted.";
@@ -399,7 +365,6 @@ public class TheFiveFrags extends FragmentActivity{
 						editor.putString("serial", "");
 						editor.putStringSet("key", new HashSet<String>());
 						editor.putBoolean("check",  false);
-						editor.putStringSet("key",  new HashSet<String>());
 						editor.commit(); 
     					
     					Toast.makeText(getApplicationContext(), "Bike has been deregistered.", Toast.LENGTH_LONG).show(); //lets user know that bike has been deregistered
@@ -422,7 +387,10 @@ public class TheFiveFrags extends FragmentActivity{
 	 * @param view
 	 */
 	public void view (View view) {
-		if (prefs.getBoolean("check", false) == true) { //if check is true
+		boolean contact = prefs.getBoolean("contact", false);
+		if (!contact) {
+			Toast.makeText(getApplicationContext(), "Please enter in your contact info first on page 3.", Toast.LENGTH_LONG).show(); //displays warning message
+		} else if (prefs.getBoolean("check", false) == true) { //if check is true
 			Intent intent = new Intent(this, ViewBikeInfo.class); //go from this class to ViewBikeInfo class
 			startActivity(intent);
 		} else {
@@ -432,7 +400,7 @@ public class TheFiveFrags extends FragmentActivity{
 	
 //------------------------------------------------------------------------------------------------//
 	
-	public class Section2Fragment extends Fragment {
+	public static class Section2Fragment extends Fragment {
 		
 		protected ImageLoader imageLoader = ImageLoader.getInstance(); //TODO what does an imageLoader do?
 		
@@ -458,7 +426,10 @@ public class TheFiveFrags extends FragmentActivity{
 	 * @param view - TODO what does a view do?
 	 */
 	public void report(View view) {
-		if (prefs.getBoolean("check",  true) == false) { //if check is false
+		boolean contact = prefs.getBoolean("contact", false);
+		if (!contact) {
+			Toast.makeText(getApplicationContext(), "Please enter in your contact info first on page 3.", Toast.LENGTH_LONG).show(); //displays warning message
+		} else if (prefs.getBoolean("check",  true) == false) { //if check is false
 			Toast.makeText(getApplicationContext(), "Cannot report. No bike registered.", Toast.LENGTH_LONG).show(); //displays message saying that no bike is registered
 		} else if (prefs.getBoolean("report", false) == true) { //if a report has been started
 			Toast.makeText(getApplicationContext(), "Another report is currently in progress.\nPlease cancel current report to make a new report.\nOr click 'Go To Current Report' to continue current one.", Toast.LENGTH_LONG).show();
@@ -478,21 +449,21 @@ public class TheFiveFrags extends FragmentActivity{
 			editor.putInt("day",  1); //set day to 1
 			editor.commit(); //save edits
 			
-			GPS gps = new GPS(getBaseContext()); //TODO what does getBaseContext do?
+//			GPS gps = new GPS(getBaseContext()); //TODO what does getBaseContext do?
 
 			// check if GPS enabled		
-	        if(gps.canGetLocation()){
-	        	
-	        	float latitude = (float) gps.getLatitude(); //gets latitude of user's phone
-	        	float longitude = (float) gps.getLongitude(); //gets longitude of user's phone
-	        	
-	        	editor.putFloat("lat", latitude); //stores latitude
-	        	editor.putFloat("lat", longitude); //stores longitude
-	        	editor.commit(); //saves edits
-	        }else{
-	        	// Ask user to enable GPS/network in settings
-	        	gps.showSettingsAlert();
-	        }  
+//	        if(gps.canGetLocation()){
+//	        	
+//	        	float latitude = (float) gps.getLatitude(); //gets latitude of user's phone
+//	        	float longitude = (float) gps.getLongitude(); //gets longitude of user's phone
+//	        	
+//	        	editor.putFloat("lat", latitude); //stores latitude
+//	        	editor.putFloat("lat", longitude); //stores longitude
+//	        	editor.commit(); //saves edits
+//	        }else{
+//	        	// Ask user to enable GPS/network in settings
+//	        	gps.showSettingsAlert(this);
+//	        }  
 	        
 	        Intent intent = new Intent(this, NewReport.class); //go from this class to NewReport class
 	        startActivity(intent);
@@ -504,7 +475,10 @@ public class TheFiveFrags extends FragmentActivity{
 	 * @param view - TODO what does View do?
 	 */
 	public void viewReport (View view) {
-		if (prefs.getBoolean("report",  true) == false) { //if there is no report in progress
+		boolean contact = prefs.getBoolean("contact", false);
+		if (!contact) {
+			Toast.makeText(getApplicationContext(), "Please enter in your contact info first on page 3.", Toast.LENGTH_LONG).show(); //displays warning message
+		} else if (prefs.getBoolean("report",  true) == false) { //if there is no report in progress
 			Toast.makeText(getApplicationContext(), "There is no report in progress.", Toast.LENGTH_LONG).show(); //tell user that there is no report to see
 		} else { //if there is a report in progress
 			if (prefs.getBoolean("reportFinish", false) == true) { //if the report is done
@@ -522,14 +496,10 @@ public class TheFiveFrags extends FragmentActivity{
 	 * @param view - TODO what does a View do?
 	 */
 	public void cancelReport (View view) {
-		editor.putString("description", "");
-		editor.putString("serial", "");
-		editor.putStringSet("key", new HashSet<String>());
-		editor.putBoolean("check",  false);
-		editor.putStringSet("key",  new HashSet<String>());
-		editor.commit(); 
-	
-		if (prefs.getBoolean("report", true) == false) { //if there is no report
+		boolean contact = prefs.getBoolean("contact", false);
+		if (!contact) {
+			Toast.makeText(getApplicationContext(), "Please enter in your contact info first on page 3.", Toast.LENGTH_LONG).show(); //displays warning message
+		} else if (prefs.getBoolean("report", true) == false) { //if there is no report
 			Toast.makeText(getApplicationContext(), "There is no current report.", Toast.LENGTH_LONG).show(); //tell user there is no report to delete
 		} else if (prefs.getBoolean("reportFinish", true) == false) { //if there is a report in progress and it is not finished
 			String popup = "It looks like you haven't finished filling out the report.\n"; //tell user that the report is not finished yet
@@ -546,6 +516,12 @@ public class TheFiveFrags extends FragmentActivity{
 			        switch (which){
 			        case DialogInterface.BUTTON_POSITIVE: //if they do want to cancel it
 			        	Toast.makeText(getApplicationContext(), "Report cancelled.", Toast.LENGTH_LONG).show(); //tell user that it is cancelled
+			        	editor.putString("description", "");
+			    		editor.putString("serial", "");
+			    		editor.putStringSet("key", new HashSet<String>());
+			    		editor.putBoolean("report",  false);
+			    		editor.putBoolean("reportFinish", false);
+			    		editor.commit(); 
 			        	break;
 			        	
 			        case DialogInterface.BUTTON_NEGATIVE: //if they don't want to cancel it, nothing happens
@@ -572,6 +548,13 @@ public class TheFiveFrags extends FragmentActivity{
 			        switch (which){
 			        case DialogInterface.BUTTON_POSITIVE: //if bike has been recovered
 			        	Toast.makeText(getApplicationContext(), "Great to hear! We will cancel your report now.", Toast.LENGTH_LONG).show(); //send positive message to user!
+			        	editor.putString("description", "");
+			    		editor.putString("serial", "");
+			    		editor.putStringSet("key", new HashSet<String>());
+			    		editor.putBoolean("report",  false);
+			    		editor.putBoolean("reportFinish", false);
+			    		editor.putStringSet("key",  new HashSet<String>());
+			    		editor.commit(); 
 			        	break;
 
 			        case DialogInterface.BUTTON_NEGATIVE: //if user's bike has not been recovered
@@ -591,6 +574,13 @@ public class TheFiveFrags extends FragmentActivity{
 						        //cleans out report to restart
 						        case DialogInterface.BUTTON_POSITIVE: //if user wants to cancel report
 						        	Toast.makeText(getApplicationContext(), "Report has been cancelled.", Toast.LENGTH_LONG).show(); //tell them his/her report is cancelled
+						        	editor.putString("description", "");
+						    		editor.putString("serial", "");
+						    		editor.putStringSet("key", new HashSet<String>());
+						    		editor.putBoolean("report",  false);
+						    		editor.putBoolean("reportFinish", false);
+						    		editor.putStringSet("key",  new HashSet<String>());
+						    		editor.commit(); 
 						        	break;
 
 						        case DialogInterface.BUTTON_NEGATIVE: //if user does not want to cancel report, do nothing
@@ -634,15 +624,40 @@ public class TheFiveFrags extends FragmentActivity{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param view - TODO what does this do?
+	 */
+	public void onClick (View view) {
+		EditText editText = (EditText) findViewById(R.id.serial_num);
+		String serialNum = editText.getText().toString();
+		
+		String second = "";
+		
+		if (serialNum.equals("")) { //if no report number was added
+			second += "serial number, "; //adds in warning of the fact that police report number is not filled in
+		}
+		
+		boolean contact = prefs.getBoolean("contact", false);
+		if (!contact) {
+			new AlertDialog.Builder(this).setTitle("Incomplete").setMessage("Please enter in your contact info first on page 3.").show();
+		} else if (!second.equals("")) {
+			new AlertDialog.Builder(this).setTitle("Incomplete").setMessage("Please enter a serial number.").show();
+		} else {
+			Intent intent = new Intent(this, SearchSerialNum.class);
+			startActivity(intent);
+		}
+	}
+	
 	//--------------------------------------------------------------------------------------------//
 	
-	public class Section4Fragment extends Fragment {
+	public static class Section4Fragment extends Fragment {
 		
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.personal_info, container, false);
+			View rootView = inflater.inflate(R.layout.edit_contact_info, container, false);
 			return rootView;
 		}
 		
@@ -653,27 +668,31 @@ public class TheFiveFrags extends FragmentActivity{
 		public void onActivityCreated (Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState); //TODO what does this super to?
 			
-			EditText editText = (EditText) findViewById(R.id.name); //set editText to the one with ID of name
+			EditText editText = (EditText) getActivity().findViewById(R.id.name); //set editText to the one with ID of name
 			String nombre = prefs.getString("name",""); //set this var to whatever is stored in name 
-			editText.setText(nombre.substring(0,nombre.length()-2), TextView.BufferType.EDITABLE); //cut off the number to indicate duplicate
+			if (nombre.length() == 0) {
+				editText.setText("", TextView.BufferType.EDITABLE);
+			} else {
+				editText.setText(nombre.substring(0,nombre.length()-2), TextView.BufferType.EDITABLE); //cut off the number to indicate duplicate
+			}
 			
-	    	editText = (EditText) findViewById(R.id.street_address); //set editText to the one with ID of street address
+	    	editText = (EditText) getActivity().findViewById(R.id.street_address); //set editText to the one with ID of street address
 	    	editText.setText(prefs.getString("streetAddress", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in streetAddress 
 	    	
-	    	editText = (EditText) findViewById(R.id.email_address); //set editText to the one with ID of email address
+	    	editText = (EditText) getActivity().findViewById(R.id.email_address); //set editText to the one with ID of email address
 	    	editText.setText(prefs.getString("emailAddress", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in emailAddress
 	    	
-	    	editText = (EditText) findViewById(R.id.phone_number); //set editText to the one with ID of phone number
+	    	editText = (EditText) getActivity().findViewById(R.id.phone_number); //set editText to the one with ID of phone number
 	    	editText.setText(prefs.getString("phoneNum", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in phoneNum
 	    	
-	    	editText = (EditText) findViewById(R.id.facebook); //set editText to the one with ID of facebook
+	    	editText = (EditText) getActivity().findViewById(R.id.facebook); //set editText to the one with ID of facebook
 	    	editText.setText(prefs.getString("fb", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in fb
 	    	
-	    	editText = (EditText) findViewById(R.id.twitter); //set editText to the one with ID of twitter
-	    	editText.setText(prefs.getString("twitter", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in twitter 
+	    	editText = (EditText) getActivity().findViewById(R.id.instagram); //set editText to the one with ID of instagram
+	    	editText.setText(prefs.getString("instagram", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in instagram
 	    	
-	    	editText = (EditText) findViewById(R.id.google_plus);//set editText to the one with ID of google plus
-	    	editText.setText(prefs.getString("googlePlus", ""), TextView.BufferType.EDITABLE);  //set this var to whatever is stored in googlePlus
+	    	editText = (EditText) getActivity().findViewById(R.id.twitter); //set editText to the one with ID of twitter
+	    	editText.setText(prefs.getString("twitter", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in twitter 
 		}
 	}
 	
@@ -697,11 +716,11 @@ public class TheFiveFrags extends FragmentActivity{
     	editText = (EditText) findViewById(R.id.facebook); //set editText to one with ID of facebook
     	fb = editText.getText().toString(); //sets fb to whatever is in the editText
     	
+    	editText = (EditText) findViewById(R.id.instagram); //set editText to one with ID of instagram
+    	instagram = editText.getText().toString(); //sets instagram to whatever is in the editText
+    	
     	editText = (EditText) findViewById(R.id.twitter); //set editText to one with ID of twitter
     	twitter = editText.getText().toString(); //sets twitter to whatever is in the editText
-    	
-    	editText = (EditText) findViewById(R.id.google_plus); //set editText to one with ID of google_plus
-    	googlePlus = editText.getText().toString(); //sets googlePlus to whatever is in the editText
     	
     	String first = "The following items have not been completed properly: "; //beginning of warning message
 		String second = ""; //another part of the warning message
@@ -747,18 +766,19 @@ public class TheFiveFrags extends FragmentActivity{
 	    	editor.putString("emailAddress", emailAddress);
 	    	editor.putString("phoneNum", phoneNum);
 	    	editor.putString("fb", fb);
+	    	editor.putString("instagram", instagram);
 	    	editor.putString("twitter", twitter);
-	    	editor.putString("googlePlus", googlePlus);
-			editor.commit();
-		 
-    		Intent intent = new Intent(this, TheFiveFrags.class); //go from this class to TheFiveFrags class
+	    	editor.putBoolean("contact", true);
+	    	editor.commit();
+	    	
+	    	Intent intent = new Intent(this, TheFiveFrags.class); //go from this class to TheFiveFrags class
     		startActivity(intent);
 		}
 	}
 	
 	//-------------------------------------------------------------------------------------------//
 	//Bikeshop
-	public class Section5Fragment extends Fragment {
+	public static class Section5Fragment extends Fragment {
 		
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -775,27 +795,33 @@ public class TheFiveFrags extends FragmentActivity{
 		public void onActivityCreated (Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState); //TODO what does this super to?
 			
-			EditText editText = (EditText) findViewById(R.id.name); //set editText to the one with ID of name
-			String nombre = prefs.getString("name",""); //set this var to whatever is stored in name 
-			editText.setText(nombre.substring(0,nombre.length()-2), TextView.BufferType.EDITABLE); //cut off the number to indicate duplicate
-			
-	    	editText = (EditText) findViewById(R.id.street_address); //set editText to the one with ID of street address
-	    	editText.setText(prefs.getString("streetAddress", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in streetAddress 
+			EditText editText = (EditText) getActivity().findViewById(R.id.shop_bikeshop); //set editText to the one with ID of street address
+	    	editText.setText(prefs.getString("shopBikeShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in streetAddress 
 	    	
-	    	editText = (EditText) findViewById(R.id.email_address); //set editText to the one with ID of email address
-	    	editText.setText(prefs.getString("emailAddress", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in emailAddress
+			editText = (EditText) getActivity().findViewById(R.id.name_bikeshop); //set editText to the one with ID of name
+			String nombre = prefs.getString("nameBikeShop",""); //set this var to whatever is stored in name 
+			if (!nombre.equals("")) //if num is already a bike's serial number
+				editText.setText(nombre.substring(0,nombre.length()-2), TextView.BufferType.EDITABLE); //display the serial number
+			else
+				editText.setText("", TextView.BufferType.EDITABLE); //set the edit text box as blank
+		
+	    	editText = (EditText) getActivity().findViewById(R.id.street_address_bikeshop); //set editText to the one with ID of street address
+	    	editText.setText(prefs.getString("streetAddressBikeShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in streetAddress 
 	    	
-	    	editText = (EditText) findViewById(R.id.phone_number); //set editText to the one with ID of phone number
-	    	editText.setText(prefs.getString("phoneNum", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in phoneNum
+	    	editText = (EditText) getActivity().findViewById(R.id.email_address_bikeshop); //set editText to the one with ID of email address
+	    	editText.setText(prefs.getString("emailAddressBikeShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in emailAddress
 	    	
-	    	editText = (EditText) findViewById(R.id.facebook); //set editText to the one with ID of facebook
-	    	editText.setText(prefs.getString("fb", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in fb
+	    	editText = (EditText) getActivity().findViewById(R.id.phone_number_bikeshop); //set editText to the one with ID of phone number
+	    	editText.setText(prefs.getString("phoneNumBikeShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in phoneNum
 	    	
-	    	editText = (EditText) findViewById(R.id.twitter); //set editText to the one with ID of twitter
-	    	editText.setText(prefs.getString("twitter", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in twitter 
+	    	editText = (EditText) getActivity().findViewById(R.id.facebook_bikeshop); //set editText to the one with ID of facebook
+	    	editText.setText(prefs.getString("fbBikeShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in fb
 	    	
-	    	editText = (EditText) findViewById(R.id.google_plus);//set editText to the one with ID of google plus
-	    	editText.setText(prefs.getString("googlePlus", ""), TextView.BufferType.EDITABLE);  //set this var to whatever is stored in googlePlus
+	    	editText = (EditText) getActivity().findViewById(R.id.instagram_bikeshop); //set editText to the one with ID of instagram
+	    	editText.setText(prefs.getString("instagramBikeShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in instagram
+	    	
+	    	editText = (EditText) getActivity().findViewById(R.id.twitter_bikeshop); //set editText to the one with ID of twitter
+	    	editText.setText(prefs.getString("twitterBikeShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in twitter 
 		}
 	}
 	
@@ -804,36 +830,43 @@ public class TheFiveFrags extends FragmentActivity{
 	 * @param view - TODO what does a View do?
 	 */
 	public void editBikeShop(View view) {
-		EditText editText = (EditText) findViewById(R.id.name); //set editText to one with ID of name
-    	name = editText.getText().toString()+"_0"; //sets name to whatever is in the editText plus a number for duplicate tracking
+		EditText editText = (EditText) findViewById(R.id.shop_bikeshop); //set editText to one with ID of name
+    	shopBikeShop = editText.getText().toString(); //sets name to whatever is in the editText plus a number for duplicate tracking
     	
-    	editText = (EditText) findViewById(R.id.street_address); //set editText to one with ID of street address
-    	streetAddress = editText.getText().toString(); //sets streetAddress to whatever is in the editText
+		editText = (EditText) findViewById(R.id.name_bikeshop); //set editText to one with ID of name
+    	nameBikeShop = editText.getText().toString()+"_0"; //sets name to whatever is in the editText plus a number for duplicate tracking
     	
-    	editText = (EditText) findViewById(R.id.email_address); //set editText to one with ID of email address
-    	emailAddress = editText.getText().toString(); //sets emailAddress to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.street_address_bikeshop); //set editText to one with ID of street address
+    	streetAddressBikeShop = editText.getText().toString(); //sets streetAddress to whatever is in the editText
     	
-    	editText = (EditText) findViewById(R.id.phone_number); //set editText to one with ID of phone_number
-    	phoneNum = editText.getText().toString(); //sets phoneNum to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.email_address_bikeshop); //set editText to one with ID of email address
+    	emailAddressBikeShop = editText.getText().toString(); //sets emailAddress to whatever is in the editText
     	
-    	editText = (EditText) findViewById(R.id.facebook); //set editText to one with ID of facebook
-    	fb = editText.getText().toString(); //sets fb to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.phone_number_bikeshop); //set editText to one with ID of phone_number
+    	phoneNumBikeShop = editText.getText().toString(); //sets phoneNum to whatever is in the editText
     	
-    	editText = (EditText) findViewById(R.id.twitter); //set editText to one with ID of twitter
-    	twitter = editText.getText().toString(); //sets twitter to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.facebook_bikeshop); //set editText to one with ID of facebook
+    	fbBikeShop = editText.getText().toString(); //sets fb to whatever is in the editText
     	
-    	editText = (EditText) findViewById(R.id.google_plus); //set editText to one with ID of google_plus
-    	googlePlus = editText.getText().toString(); //sets googlePlus to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.instagram_bikeshop); //set editText to one with ID of instagram
+    	instagramBikeShop = editText.getText().toString(); //sets instagram to whatever is in the editText
+    	
+    	editText = (EditText) findViewById(R.id.twitter_bikeshop); //set editText to one with ID of twitter
+    	twitterBikeShop = editText.getText().toString(); //sets twitter to whatever is in the editText
     	
     	String first = "The following items have not been completed properly: "; //beginning of warning message
 		String second = ""; //another part of the warning message
 		String message = ""; //total warning message
 		
-		if (name.equals("")) { //if name is not filled in
-			second += "name, "; //add name as an incompleted field
+		if (shopBikeShop.equals("")) { //if name is not filled in
+			second += "name of shop, "; //add name as an incompleted field
 		}
 		
-		if (streetAddress.equals("")) { //if street address is not filled in
+		if (nameBikeShop.equals("")) { //if name is not filled in
+			second += "name of user, "; //add name as an incompleted field
+		}
+		
+		if (streetAddressBikeShop.equals("")) { //if street address is not filled in
 			second += "street address, "; //add street address as an incompleted field
 		}
 	
@@ -841,14 +874,14 @@ public class TheFiveFrags extends FragmentActivity{
 				"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"; //regex pattern
 		Pattern ePattern = Pattern.compile(EMAIL_PATTERN); //TODO what does a Pattern do? what does compile do?
-		Matcher eMatch = ePattern.matcher(emailAddress); //TODO what does Matcher do?
+		Matcher eMatch = ePattern.matcher(emailAddressBikeShop); //TODO what does Matcher do?
 		
 		if (!eMatch.matches()) { //TODO what does this condition do?
 			second += "email address, "; //add email address as an incompleted field
 		} 
 		
 		String expression = "(\\d{3}-){1,2}\\d{4}"; //a regex pattern
-	    CharSequence inputStr = phoneNum; //TODO what does a CharSequence do?
+	    CharSequence inputStr = phoneNumBikeShop; //TODO what does a CharSequence do?
 	    Pattern pattern = Pattern.compile(expression); //TODO what does a pattern do? what does compile do?
 	    Matcher matcher = pattern.matcher(inputStr); //TODO what does a Matcher do?
 	    
@@ -864,13 +897,13 @@ public class TheFiveFrags extends FragmentActivity{
     		new AlertDialog.Builder(this).setTitle("Not Completed").setMessage(message.substring(0,message.length()-2)).show();
     		//show user an error message saying that their info is incomplete
     	} else {
-    		editor.putString("name", name);
-	    	editor.putString("streetAddress", streetAddress);
-	    	editor.putString("emailAddress", emailAddress);
-	    	editor.putString("phoneNum", phoneNum);
-	    	editor.putString("fb", fb);
-	    	editor.putString("twitter", twitter);
-	    	editor.putString("googlePlus", googlePlus);
+    		editor.putString("nameBikeShop", nameBikeShop);
+	    	editor.putString("streetAddressBikeShop", streetAddressBikeShop);
+	    	editor.putString("emailAddressBikeShop", emailAddressBikeShop);
+	    	editor.putString("phoneNumBikeShop", phoneNumBikeShop);
+	    	editor.putString("fbBikeShop", fbBikeShop);
+	    	editor.putString("twitterBikeShop", twitterBikeShop);
+	    	editor.putString("instagramBikeShop", instagramBikeShop);
 			editor.commit();
 		 
     		Intent intent = new Intent(this, TheFiveFrags.class); //go from this class to TheFiveFrags class
@@ -880,7 +913,7 @@ public class TheFiveFrags extends FragmentActivity{
 	
 	//-------------------------------------------------------------------------------------------//
 	//Pawnshop
-	public class Section6Fragment extends Fragment {
+	public static class Section6Fragment extends Fragment {
 		
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -897,28 +930,34 @@ public class TheFiveFrags extends FragmentActivity{
 		public void onActivityCreated (Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState); //TODO what does this super to?
 			
-			EditText editText = (EditText) findViewById(R.id.name); //set editText to the one with ID of name
-			String nombre = prefs.getString("name",""); //set this var to whatever is stored in name 
-			editText.setText(nombre.substring(0,nombre.length()-2), TextView.BufferType.EDITABLE); //cut off the number to indicate duplicate
+			EditText editText = (EditText) getActivity().findViewById(R.id.shop_pawnshop); //set editText to the one with ID of street address
+	    	editText.setText(prefs.getString("shopPawnShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in streetAddress 
+	    	
+			editText = (EditText) getActivity().findViewById(R.id.name_pawnshop); //set editText to the one with ID of name
+			String nombre = prefs.getString("namePawnShop",""); //set this var to whatever is stored in name 
+			if (!nombre.equals("")) //if num is already a bike's serial number
+				editText.setText(nombre.substring(0,nombre.length()-2), TextView.BufferType.EDITABLE); //display the serial number
+			else
+				editText.setText("", TextView.BufferType.EDITABLE); //set the edit text box as blank
 			
-	    	editText = (EditText) findViewById(R.id.street_address); //set editText to the one with ID of street address
-	    	editText.setText(prefs.getString("streetAddress", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in streetAddress 
+	    	editText = (EditText) getActivity().findViewById(R.id.street_address_pawnshop); //set editText to the one with ID of street address
+	    	editText.setText(prefs.getString("streetAddressPawnShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in streetAddress 
 	    	
-	    	editText = (EditText) findViewById(R.id.email_address); //set editText to the one with ID of email address
-	    	editText.setText(prefs.getString("emailAddress", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in emailAddress
+	    	editText = (EditText) getActivity().findViewById(R.id.email_address_pawnshop); //set editText to the one with ID of email address
+	    	editText.setText(prefs.getString("emailAddressPawnShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in emailAddress
 	    	
-	    	editText = (EditText) findViewById(R.id.phone_number); //set editText to the one with ID of phone number
-	    	editText.setText(prefs.getString("phoneNum", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in phoneNum
+	    	editText = (EditText) getActivity().findViewById(R.id.phone_number_pawnshop); //set editText to the one with ID of phone number
+	    	editText.setText(prefs.getString("phoneNumPawnShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in phoneNum
 	    	
-	    	editText = (EditText) findViewById(R.id.facebook); //set editText to the one with ID of facebook
-	    	editText.setText(prefs.getString("fb", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in fb
+	    	editText = (EditText) getActivity().findViewById(R.id.facebook_pawnshop); //set editText to the one with ID of facebook
+	    	editText.setText(prefs.getString("fbPawnShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in fb
 	    	
-	    	editText = (EditText) findViewById(R.id.twitter); //set editText to the one with ID of twitter
-	    	editText.setText(prefs.getString("twitter", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in twitter 
+	    	editText = (EditText) getActivity().findViewById(R.id.instagram_pawnshop); //set editText to the one with ID of instagram
+	    	editText.setText(prefs.getString("instagramPawnShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in instagram
 	    	
-	    	editText = (EditText) findViewById(R.id.google_plus);//set editText to the one with ID of google plus
-	    	editText.setText(prefs.getString("googlePlus", ""), TextView.BufferType.EDITABLE);  //set this var to whatever is stored in googlePlus
-		}
+	    	editText = (EditText) getActivity().findViewById(R.id.twitter_pawnshop); //set editText to the one with ID of twitter
+	    	editText.setText(prefs.getString("twitterPawnShop", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in twitter 
+	    }
 	}
 	
 	/**
@@ -926,36 +965,43 @@ public class TheFiveFrags extends FragmentActivity{
 	 * @param view - TODO what does a View do?
 	 */
 	public void editPawnShop(View view) {
-		EditText editText = (EditText) findViewById(R.id.name); //set editText to one with ID of name
-    	name = editText.getText().toString()+"_0"; //sets name to whatever is in the editText plus a number for duplicate tracking
+		EditText editText = (EditText) findViewById(R.id.shop_pawnshop); //set editText to one with ID of name
+    	shopPawnShop = editText.getText().toString(); //sets name to whatever is in the editText plus a number for duplicate tracking
     	
-    	editText = (EditText) findViewById(R.id.street_address); //set editText to one with ID of street address
-    	streetAddress = editText.getText().toString(); //sets streetAddress to whatever is in the editText
+		editText = (EditText) findViewById(R.id.name_pawnshop); //set editText to one with ID of name
+    	namePawnShop = editText.getText().toString()+"_0"; //sets name to whatever is in the editText plus a number for duplicate tracking
     	
-    	editText = (EditText) findViewById(R.id.email_address); //set editText to one with ID of email address
-    	emailAddress = editText.getText().toString(); //sets emailAddress to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.street_address_pawnshop); //set editText to one with ID of street address
+    	streetAddressPawnShop = editText.getText().toString(); //sets streetAddress to whatever is in the editText
     	
-    	editText = (EditText) findViewById(R.id.phone_number); //set editText to one with ID of phone_number
-    	phoneNum = editText.getText().toString(); //sets phoneNum to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.email_address_pawnshop); //set editText to one with ID of email address
+    	emailAddressPawnShop = editText.getText().toString(); //sets emailAddress to whatever is in the editText
     	
-    	editText = (EditText) findViewById(R.id.facebook); //set editText to one with ID of facebook
-    	fb = editText.getText().toString(); //sets fb to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.phone_number_pawnshop); //set editText to one with ID of phone_number
+    	phoneNumPawnShop = editText.getText().toString(); //sets phoneNum to whatever is in the editText
     	
-    	editText = (EditText) findViewById(R.id.twitter); //set editText to one with ID of twitter
-    	twitter = editText.getText().toString(); //sets twitter to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.facebook_pawnshop); //set editText to one with ID of facebook
+    	fbPawnShop = editText.getText().toString(); //sets fb to whatever is in the editText
     	
-    	editText = (EditText) findViewById(R.id.google_plus); //set editText to one with ID of google_plus
-    	googlePlus = editText.getText().toString(); //sets googlePlus to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.instagram_pawnshop); //set editText to one with ID of instagram
+    	instagramPawnShop = editText.getText().toString(); //sets instagram to whatever is in the editText
+    	
+    	editText = (EditText) findViewById(R.id.twitter_pawnshop); //set editText to one with ID of twitter
+    	twitterPawnShop = editText.getText().toString(); //sets twitter to whatever is in the editText
     	
     	String first = "The following items have not been completed properly: "; //beginning of warning message
 		String second = ""; //another part of the warning message
 		String message = ""; //total warning message
 		
-		if (name.equals("")) { //if name is not filled in
-			second += "name, "; //add name as an incompleted field
+		if (shopPawnShop.equals("")) { //if name is not filled in
+			second += "name of shop, "; //add name as an incompleted field
 		}
 		
-		if (streetAddress.equals("")) { //if street address is not filled in
+		if (namePawnShop.equals("")) { //if name is not filled in
+			second += "name of user, "; //add name as an incompleted field
+		}
+		
+		if (streetAddressPawnShop.equals("")) { //if street address is not filled in
 			second += "street address, "; //add street address as an incompleted field
 		}
 	
@@ -963,14 +1009,14 @@ public class TheFiveFrags extends FragmentActivity{
 				"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"; //regex pattern
 		Pattern ePattern = Pattern.compile(EMAIL_PATTERN); //TODO what does a Pattern do? what does compile do?
-		Matcher eMatch = ePattern.matcher(emailAddress); //TODO what does Matcher do?
+		Matcher eMatch = ePattern.matcher(emailAddressPawnShop); //TODO what does Matcher do?
 		
 		if (!eMatch.matches()) { //TODO what does this condition do?
 			second += "email address, "; //add email address as an incompleted field
 		} 
 		
 		String expression = "(\\d{3}-){1,2}\\d{4}"; //a regex pattern
-	    CharSequence inputStr = phoneNum; //TODO what does a CharSequence do?
+	    CharSequence inputStr = phoneNumPawnShop; //TODO what does a CharSequence do?
 	    Pattern pattern = Pattern.compile(expression); //TODO what does a pattern do? what does compile do?
 	    Matcher matcher = pattern.matcher(inputStr); //TODO what does a Matcher do?
 	    
@@ -986,14 +1032,14 @@ public class TheFiveFrags extends FragmentActivity{
     		new AlertDialog.Builder(this).setTitle("Not Completed").setMessage(message.substring(0,message.length()-2)).show();
     		//show user an error message saying that their info is incomplete
     	} else {
-    		editor.putString("name", name);
-	    	editor.putString("streetAddress", streetAddress);
-	    	editor.putString("emailAddress", emailAddress);
-	    	editor.putString("phoneNum", phoneNum);
-	    	editor.putString("fb", fb);
-	    	editor.putString("twitter", twitter);
-	    	editor.putString("googlePlus", googlePlus);
-			editor.commit();
+    		editor.putString("namePawnShop", namePawnShop);
+	    	editor.putString("streetAddressPawnShop", streetAddressPawnShop);
+	    	editor.putString("emailAddressPawnShop", emailAddressPawnShop);
+	    	editor.putString("phoneNumPawnShop", phoneNumPawnShop);
+	    	editor.putString("fbPawnShop", fbPawnShop);
+	    	editor.putString("instagramPawnShop", instagramPawnShop);
+	    	editor.putString("twitterPawnShop", twitterPawnShop);
+	    	editor.commit();
 		 
     		Intent intent = new Intent(this, TheFiveFrags.class); //go from this class to TheFiveFrags class
     		startActivity(intent);
@@ -1002,7 +1048,7 @@ public class TheFiveFrags extends FragmentActivity{
 	
 	//-------------------------------------------------------------------------------------------//
 	//Law Enforcement
-	public class Section7Fragment extends Fragment {
+	public static class Section7Fragment extends Fragment {
 		
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -1019,27 +1065,33 @@ public class TheFiveFrags extends FragmentActivity{
 		public void onActivityCreated (Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState); //TODO what does this super to?
 			
-			EditText editText = (EditText) findViewById(R.id.name); //set editText to the one with ID of name
-			String nombre = prefs.getString("name",""); //set this var to whatever is stored in name 
-			editText.setText(nombre.substring(0,nombre.length()-2), TextView.BufferType.EDITABLE); //cut off the number to indicate duplicate
+			EditText editText = (EditText) getActivity().findViewById(R.id.dept_police); //set editText to the one with ID of street address
+	    	editText.setText(prefs.getString("deptPoliceDept", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in streetAddress 
 			
-	    	editText = (EditText) findViewById(R.id.street_address); //set editText to the one with ID of street address
-	    	editText.setText(prefs.getString("streetAddress", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in streetAddress 
+			editText = (EditText) getActivity().findViewById(R.id.name_police); //set editText to the one with ID of name
+			String nombre = prefs.getString("namePoliceDept",""); //set this var to whatever is stored in name 
+			if (!nombre.equals("")) //if num is already a bike's serial number
+				editText.setText(nombre.substring(0,nombre.length()-2), TextView.BufferType.EDITABLE); //display the serial number
+			else
+				editText.setText("", TextView.BufferType.EDITABLE); //set the edit text box as blank
+			
+	    	editText = (EditText) getActivity().findViewById(R.id.street_address_police); //set editText to the one with ID of street address
+	    	editText.setText(prefs.getString("streetAddressPoliceDept", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in streetAddress 
 	    	
-	    	editText = (EditText) findViewById(R.id.email_address); //set editText to the one with ID of email address
-	    	editText.setText(prefs.getString("emailAddress", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in emailAddress
+	    	editText = (EditText) getActivity().findViewById(R.id.email_address_police); //set editText to the one with ID of email address
+	    	editText.setText(prefs.getString("emailAddressPoliceDept", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in emailAddress
 	    	
-	    	editText = (EditText) findViewById(R.id.phone_number); //set editText to the one with ID of phone number
-	    	editText.setText(prefs.getString("phoneNum", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in phoneNum
+	    	editText = (EditText) getActivity().findViewById(R.id.phone_number_police); //set editText to the one with ID of phone number
+	    	editText.setText(prefs.getString("phoneNumPoliceDept", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in phoneNum
 	    	
-	    	editText = (EditText) findViewById(R.id.facebook); //set editText to the one with ID of facebook
-	    	editText.setText(prefs.getString("fb", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in fb
+	    	editText = (EditText) getActivity().findViewById(R.id.facebook_police); //set editText to the one with ID of facebook
+	    	editText.setText(prefs.getString("fbPoliceDept", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in fb
 	    	
-	    	editText = (EditText) findViewById(R.id.twitter); //set editText to the one with ID of twitter
-	    	editText.setText(prefs.getString("twitter", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in twitter 
+	    	editText = (EditText) getActivity().findViewById(R.id.instagram_police); //set editText to the one with ID of instagram
+	    	editText.setText(prefs.getString("instagramPoliceDept", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in instagram
 	    	
-	    	editText = (EditText) findViewById(R.id.google_plus);//set editText to the one with ID of google plus
-	    	editText.setText(prefs.getString("googlePlus", ""), TextView.BufferType.EDITABLE);  //set this var to whatever is stored in googlePlus
+	    	editText = (EditText) getActivity().findViewById(R.id.twitter_police); //set editText to the one with ID of twitter
+	    	editText.setText(prefs.getString("twitterPoliceDept", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in twitter 
 		}
 	}
 	
@@ -1048,36 +1100,43 @@ public class TheFiveFrags extends FragmentActivity{
 	 * @param view - TODO what does a View do?
 	 */
 	public void editLawEnforcement(View view) {
-		EditText editText = (EditText) findViewById(R.id.name); //set editText to one with ID of name
-    	name = editText.getText().toString()+"_0"; //sets name to whatever is in the editText plus a number for duplicate tracking
+		EditText editText = (EditText) findViewById(R.id.dept_police); //set editText to one with ID of name
+    	deptPoliceDept = editText.getText().toString(); //sets name to whatever is in the editText plus a number for duplicate tracking
     	
-    	editText = (EditText) findViewById(R.id.street_address); //set editText to one with ID of street address
-    	streetAddress = editText.getText().toString(); //sets streetAddress to whatever is in the editText
+		editText = (EditText) findViewById(R.id.name_police); //set editText to one with ID of name
+    	namePoliceDept = editText.getText().toString()+"_0"; //sets name to whatever is in the editText plus a number for duplicate tracking
     	
-    	editText = (EditText) findViewById(R.id.email_address); //set editText to one with ID of email address
-    	emailAddress = editText.getText().toString(); //sets emailAddress to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.street_address_police); //set editText to one with ID of street address
+    	streetAddressPoliceDept = editText.getText().toString(); //sets streetAddress to whatever is in the editText
     	
-    	editText = (EditText) findViewById(R.id.phone_number); //set editText to one with ID of phone_number
-    	phoneNum = editText.getText().toString(); //sets phoneNum to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.email_address_police); //set editText to one with ID of email address
+    	emailAddressPoliceDept = editText.getText().toString(); //sets emailAddress to whatever is in the editText
     	
-    	editText = (EditText) findViewById(R.id.facebook); //set editText to one with ID of facebook
-    	fb = editText.getText().toString(); //sets fb to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.phone_number_police); //set editText to one with ID of phone_number
+    	phoneNumPoliceDept = editText.getText().toString(); //sets phoneNum to whatever is in the editText
     	
-    	editText = (EditText) findViewById(R.id.twitter); //set editText to one with ID of twitter
-    	twitter = editText.getText().toString(); //sets twitter to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.facebook_police); //set editText to one with ID of facebook
+    	fbPoliceDept = editText.getText().toString(); //sets fb to whatever is in the editText
     	
-    	editText = (EditText) findViewById(R.id.google_plus); //set editText to one with ID of google_plus
-    	googlePlus = editText.getText().toString(); //sets googlePlus to whatever is in the editText
+    	editText = (EditText) findViewById(R.id.instagram_police); //set editText to one with ID of instagram
+    	instagramPoliceDept = editText.getText().toString(); //sets instagram to whatever is in the editText
+    	
+    	editText = (EditText) findViewById(R.id.twitter_police); //set editText to one with ID of twitter
+    	twitterPoliceDept = editText.getText().toString(); //sets twitter to whatever is in the editText
     	
     	String first = "The following items have not been completed properly: "; //beginning of warning message
 		String second = ""; //another part of the warning message
 		String message = ""; //total warning message
 		
-		if (name.equals("")) { //if name is not filled in
-			second += "name, "; //add name as an incompleted field
+		if (deptPoliceDept.equals("")) { //if name is not filled in
+			second += "name of police department, "; //add name as an incompleted field
 		}
 		
-		if (streetAddress.equals("")) { //if street address is not filled in
+		if (namePoliceDept.equals("")) { //if name is not filled in
+			second += "name of user, "; //add name as an incompleted field
+		}
+		
+		if (streetAddressPoliceDept.equals("")) { //if street address is not filled in
 			second += "street address, "; //add street address as an incompleted field
 		}
 	
@@ -1085,14 +1144,14 @@ public class TheFiveFrags extends FragmentActivity{
 				"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"; //regex pattern
 		Pattern ePattern = Pattern.compile(EMAIL_PATTERN); //TODO what does a Pattern do? what does compile do?
-		Matcher eMatch = ePattern.matcher(emailAddress); //TODO what does Matcher do?
+		Matcher eMatch = ePattern.matcher(emailAddressPoliceDept); //TODO what does Matcher do?
 		
 		if (!eMatch.matches()) { //TODO what does this condition do?
 			second += "email address, "; //add email address as an incompleted field
 		} 
 		
 		String expression = "(\\d{3}-){1,2}\\d{4}"; //a regex pattern
-	    CharSequence inputStr = phoneNum; //TODO what does a CharSequence do?
+	    CharSequence inputStr = phoneNumPoliceDept; //TODO what does a CharSequence do?
 	    Pattern pattern = Pattern.compile(expression); //TODO what does a pattern do? what does compile do?
 	    Matcher matcher = pattern.matcher(inputStr); //TODO what does a Matcher do?
 	    
@@ -1108,14 +1167,14 @@ public class TheFiveFrags extends FragmentActivity{
     		new AlertDialog.Builder(this).setTitle("Not Completed").setMessage(message.substring(0,message.length()-2)).show();
     		//show user an error message saying that their info is incomplete
     	} else {
-    		editor.putString("name", name);
-	    	editor.putString("streetAddress", streetAddress);
-	    	editor.putString("emailAddress", emailAddress);
-	    	editor.putString("phoneNum", phoneNum);
-	    	editor.putString("fb", fb);
-	    	editor.putString("twitter", twitter);
-	    	editor.putString("googlePlus", googlePlus);
-			editor.commit();
+    		editor.putString("namePoliceDept", namePoliceDept);
+	    	editor.putString("streetAddressPoliceDept", streetAddressPoliceDept);
+	    	editor.putString("emailAddressPoliceDept", emailAddressPoliceDept);
+	    	editor.putString("phoneNumPoliceDept", phoneNumPoliceDept);
+	    	editor.putString("fbPoliceDept", fbPoliceDept);
+	    	editor.putString("instagramPoliceDept", instagramPoliceDept);
+	    	editor.putString("twitterPoliceDept", twitterPoliceDept);
+	    	editor.commit();
 		 
     		Intent intent = new Intent(this, TheFiveFrags.class); //go from this class to TheFiveFrags class
     		startActivity(intent);
@@ -1123,8 +1182,8 @@ public class TheFiveFrags extends FragmentActivity{
 	}
 	
 	//-------------------------------------------------------------------------------------------//
-	//Campus/Security
-	public class Section8Fragment extends Fragment {
+	//Campus Security
+	public static class Section8Fragment extends Fragment {
 		
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -1134,14 +1193,132 @@ public class TheFiveFrags extends FragmentActivity{
 			return rootView;
 		}
 		
+		/**
+		 * sets up fragment for campus contact to put in info and submit
+		 * param - savedInstanceState: TODO what does a Bundle do?
+		 */
 		public void onActivityCreated (Bundle savedInstanceState) {
-			super.onActivityCreated(savedInstanceState);
+			super.onActivityCreated(savedInstanceState); //TODO what does this super to?
+			
+			EditText editText = (EditText) getActivity().findViewById(R.id.college_campus); //set editText to the one with ID of street address
+	    	editText.setText(prefs.getString("collegeCampus", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in streetAddress 
+	    	
+			editText = (EditText) getActivity().findViewById(R.id.name_campus); //set editText to the one with ID of name
+			String nombre = prefs.getString("nameCampus",""); //set this var to whatever is stored in name 
+			if (!nombre.equals("")) //if num is already a bike's serial number
+				editText.setText(nombre.substring(0,nombre.length()-2), TextView.BufferType.EDITABLE); //display the serial number
+			else
+				editText.setText("", TextView.BufferType.EDITABLE); //set the edit text box as blank
+			
+	    	editText = (EditText) getActivity().findViewById(R.id.street_address_campus); //set editText to the one with ID of street address
+	    	editText.setText(prefs.getString("streetAddressCampus", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in streetAddress 
+	    	
+	    	editText = (EditText) getActivity().findViewById(R.id.email_address_campus); //set editText to the one with ID of email address
+	    	editText.setText(prefs.getString("emailAddressCampus", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in emailAddress
+	    	
+	    	editText = (EditText) getActivity().findViewById(R.id.phone_number_campus); //set editText to the one with ID of phone number
+	    	editText.setText(prefs.getString("phoneNumCampus", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in phoneNum
+	    	
+	    	editText = (EditText) getActivity().findViewById(R.id.facebook_campus); //set editText to the one with ID of facebook
+	    	editText.setText(prefs.getString("fbCampus", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in fb
+	    	
+	    	editText = (EditText) getActivity().findViewById(R.id.instagram_campus); //set editText to the one with ID of instagram
+	    	editText.setText(prefs.getString("instagramCampus", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in instagram
+	    	
+	    	editText = (EditText) getActivity().findViewById(R.id.twitter_campus); //set editText to the one with ID of twitter
+	    	editText.setText(prefs.getString("twitterCampus", ""), TextView.BufferType.EDITABLE); //set this var to whatever is stored in twitter 
+		}
+	}
+	
+	/**
+	 * edit contact info for bikeshop
+	 * @param view - TODO what does a View do?
+	 */
+	public void editCampus(View view) {
+		EditText editText = (EditText) findViewById(R.id.college_campus); //set editText to one with ID of name
+    	collegeCampus = editText.getText().toString(); //sets name to whatever is in the editText plus a number for duplicate tracking
+    	
+		editText = (EditText) findViewById(R.id.name_campus); //set editText to one with ID of name
+    	nameCampus = editText.getText().toString()+"_0"; //sets name to whatever is in the editText plus a number for duplicate tracking
+    	
+    	editText = (EditText) findViewById(R.id.street_address_campus); //set editText to one with ID of street address
+    	streetAddressCampus = editText.getText().toString(); //sets streetAddress to whatever is in the editText
+    	
+    	editText = (EditText) findViewById(R.id.email_address_campus); //set editText to one with ID of email address
+    	emailAddressCampus = editText.getText().toString(); //sets emailAddress to whatever is in the editText
+    	
+    	editText = (EditText) findViewById(R.id.phone_number_campus); //set editText to one with ID of phone_number
+    	phoneNumCampus = editText.getText().toString(); //sets phoneNum to whatever is in the editText
+    	
+    	editText = (EditText) findViewById(R.id.facebook_campus); //set editText to one with ID of facebook
+    	fbCampus = editText.getText().toString(); //sets fb to whatever is in the editText
+    	
+    	editText = (EditText) findViewById(R.id.instagram_campus); //set editText to one with ID of instagram
+    	instagramCampus = editText.getText().toString(); //sets instagram to whatever is in the editText
+    	
+    	editText = (EditText) findViewById(R.id.twitter_campus); //set editText to one with ID of twitter
+    	twitterCampus = editText.getText().toString(); //sets twitter to whatever is in the editText
+    	
+    	String first = "The following items have not been completed properly: "; //beginning of warning message
+		String second = ""; //another part of the warning message
+		String message = ""; //total warning message
+		
+		if (collegeCampus.equals("")) { //if name is not filled in
+			second += "name of college, "; //add name as an incompleted field
+		}
+		
+		if (nameCampus.equals("")) { //if name is not filled in
+			second += "name of user, "; //add name as an incompleted field
+		}
+		
+		if (streetAddressCampus.equals("")) { //if street address is not filled in
+			second += "street address, "; //add street address as an incompleted field
+		}
+	
+		String EMAIL_PATTERN = 
+				"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+				+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"; //regex pattern
+		Pattern ePattern = Pattern.compile(EMAIL_PATTERN); //TODO what does a Pattern do? what does compile do?
+		Matcher eMatch = ePattern.matcher(emailAddressCampus); //TODO what does Matcher do?
+		
+		if (!eMatch.matches()) { //TODO what does this condition do?
+			second += "email address, "; //add email address as an incompleted field
+		} 
+		
+		String expression = "(\\d{3}-){1,2}\\d{4}"; //a regex pattern
+	    CharSequence inputStr = phoneNumCampus; //TODO what does a CharSequence do?
+	    Pattern pattern = Pattern.compile(expression); //TODO what does a pattern do? what does compile do?
+	    Matcher matcher = pattern.matcher(inputStr); //TODO what does a Matcher do?
+	    
+	    if(!matcher.matches()) { //TODO what does this condition do?
+	    	second += "phone number, "; //add phone number as an incompleted field
+	    }
+	    
+	    //TODO validate street address, URLs
+	    
+		message = first + second; //make total warning message
+		
+    	if (!second.equals("")) { //if there are incompleted fields
+    		new AlertDialog.Builder(this).setTitle("Not Completed").setMessage(message.substring(0,message.length()-2)).show();
+    		//show user an error message saying that their info is incomplete
+    	} else {
+    		editor.putString("nameCampus", nameCampus);
+	    	editor.putString("streetAddressCampus", streetAddressCampus);
+	    	editor.putString("emailAddressCampus", emailAddressCampus);
+	    	editor.putString("phoneNumCampus", phoneNumCampus);
+	    	editor.putString("fbCampus", fbCampus);
+	    	editor.putString("instagramCampus", instagramCampus);
+	    	editor.putString("twitterCampus", twitterCampus);
+	    	editor.commit();
+		 
+    		Intent intent = new Intent(this, TheFiveFrags.class); //go from this class to TheFiveFrags class
+    		startActivity(intent);
 		}
 	}
 		
 	//-------------------------------------------------------------------------------------------//
 	//Fundraising
-	public class Section9Fragment extends Fragment {
+	public static class Section9Fragment extends Fragment {
 		
 		public static final String ARG_SECTION_NUMBER = "section_number";
 

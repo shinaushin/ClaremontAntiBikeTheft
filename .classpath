@@ -10,5 +10,6 @@
 	<classpathentry exported="true" kind="lib" path="/Users/shinaushin/Downloads/jakarta-oro-2.0.1/jakarta-oro-2.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="/Users/shinaushin/Downloads/imageloader-core-1.5.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="/Users/shinaushin/Downloads/universal-image-loader-1.9.2.jar"/>
+	<classpathentry kind="lib" path="/Users/shinaushin/Downloads/mongo-java-driver-3.0.2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

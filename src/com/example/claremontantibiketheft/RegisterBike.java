@@ -197,7 +197,10 @@ public class RegisterBike extends FragmentActivity {
 	 */
 	public void btnChoosePhotosClick(View v){
 		EditText editText = (EditText) findViewById(R.id.serial); //assigned editText to the text field with specified ID
+		
+		//needs to check for duplicate serial number
 		serial = editText.getText().toString()+"_0"; //serial is assigned the serial number string plus zero just in case there are duplicates
+		serial = has(serial);
 		boolean seri = serial.equals(""); //checks if no serial number has been entered
 		
 		editText = (EditText) findViewById(R.id.description); //assigns editText to the text field with specified ID
@@ -231,7 +234,8 @@ public class RegisterBike extends FragmentActivity {
 			//TODO make sure logic works
 			editor.putString("serial", serial);
 			editor.putString("description", description);
-			editor.commit();
+			editor.putBoolean("check", true); //sets check to true
+			editor.commit(); //saves edit
 			
 			//specifically fragment 1
 			Intent intent = new Intent(this, TheFiveFrags.class); //moves from this class to TheFiveFrags class
@@ -243,13 +247,14 @@ public class RegisterBike extends FragmentActivity {
 	 * TODO what does this method do?
 	 * @param nam - serial number of bike
 	 */
-	public void has (String nam) {
+	public String has (String nam) {
 		if (bikes.containsKey(nam)) { //if there is a bike associated with this serial number
 			int a = Integer.parseInt(nam.substring(nam.length()-1)); //parse out the last number
 			a++; //adds 1 to the number
 			serial = nam.substring(0,nam.length()-1)+a; //assigns serial to the new duplicate serial number
 			has(serial); //recurses until it reaches a number that hasn't been taken
-		} //TODO else if bikes does not contain that key, then shouldn't it add in that duplicate?
+		}
+		return nam;
 	}
 	
 	/**
